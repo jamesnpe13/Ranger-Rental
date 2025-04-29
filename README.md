@@ -1,4 +1,5 @@
-# Vehicle Rental App
+# Ranger Rental
+### Vehicle Rental App
 
 A web application for vehicle rentals, built with a Flask backend, React frontend, and MySQL database.
 
