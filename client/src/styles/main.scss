@@ -1,0 +1,10 @@
+// scss abstracts
+@use './abstracts/colors';
+@use './abstracts/media-queries';
+@use './abstracts/mixins';
+@use './abstracts/typography';
+@use './abstracts/variables';
+
+// scss base/global
+@use './base/global';
+@use './base/reset';
