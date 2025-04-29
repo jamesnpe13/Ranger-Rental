@@ -1,7 +1,18 @@
 # Ranger Rental
 ### Vehicle Rental App
 
-A web application for vehicle rentals, built with a Flask backend, React frontend, and MySQL database.
+### Overview
+
+Vehicle Rental App is a full-stack web application designed to simplify vehicle rentals. Customers can easily browse available vehicles, plan routes, and get real-time cost estimates based on distance and vehicle type. Admins can manage the fleet, handle bookings, and track availability through a dedicated dashboard. Built with a React frontend, Flask backend, and MySQL database, the app delivers a fast, responsive, and user-friendly rental experience.
+
+### Customer Portal
+
+The Customer portal provides users with an intuitive interface to manage their vehicle rental experience. Customers can view available vehicles, check pricing and availability, and make bookings. The dashboard also displays upcoming reservations, past rental history, and the ability to modify or cancel bookings. Integrated with real-time data, users receive up-to-date information about vehicle availability and estimated costs based on their selected routes. Additionally, the dashboard ensures a smooth, responsive user experience across devices, with secure authentication via JWT.
+
+### Admin Portal
+
+The Admin Portal offers a comprehensive management interface for overseeing all aspects of the vehicle rental system. Admins can add, update, or remove vehicles from the fleet, manage pricing, and track the status of rentals in real-time. The portal provides detailed insights into current and past bookings, allowing admins to monitor customer activity, approve or cancel reservations, and manage vehicle availability. It also includes a powerful dashboard for analytics, showing rental trends and operational statistics. The portal is secured with JWT authentication and designed for optimal performance, enabling admins to make data-driven decisions efficiently.
+
 
 ## Features
 
