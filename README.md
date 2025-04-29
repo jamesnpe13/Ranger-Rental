@@ -65,7 +65,7 @@ A web application for vehicle rentals, built with a Flask backend, React fronten
 - Push notifications (email or SMS)
 - Multi-language support
 
-## Collaborators
+### Collaborators
 
-*James Elazegui and Pitchaya Utaisincharoen*
+<span style="color:gray">*James Elazegui and Pitchaya Utaisincharoen*</span>
 
