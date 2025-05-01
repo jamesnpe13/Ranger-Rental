@@ -1,10 +1,8 @@
-// scss abstracts
-@use './abstracts/colors';
-@use './abstracts/media-queries';
-@use './abstracts/mixins';
-@use './abstracts/typography';
-@use './abstracts/variables';
+// Load partials (utility/helper)
+@use "./abstracts/index" as abstracts;
 
-// scss base/global
-@use './base/global';
-@use './base/reset';
+// Load base/global styles
+@use "./base/index" as base;
+
+// Load layouts
+@use "./layout/index" as layout;
