@@ -1,16 +1,18 @@
-$primary: green;
-$secondary: green;
-$tertiary: green;
+@use "sass:color";
 
-$destructive: green;
-$greyed-out: green;
-$success: green;
-$neutral: green;
-$warning: green;
+$primary: #131313;
+$secondary: #4387e0;
+$tertiary: orange;
 
-$black: green;
-$white: green;
-$grey20: green;
-$grey40: green;
-$grey60: green;
-$grey80: green;
+$destructive: #e45353;
+$greyed-out: #c0c0c0;
+$success: #2fd44b;
+$neutral: #4387e0;
+$warning: #efaa6e;
+
+$black: #131313;
+$white: rgb(247, 247, 247);
+$grey20: color.mix($white, $black, 20%);
+$grey40: color.mix($white, $black, 40%);
+$grey60: color.mix($white, $black, 60%);
+$grey80: color.mix($white, $black, 80%);
