@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="frame">
       <HeaderBar />
-      
+
       <div className="frame__container">
         <div className="section">
           <div className="section__container">
@@ -21,8 +21,8 @@ function App() {
             nesciunt unde suscipit exercitationem. Quidem ipsum dolorem,
             reiciendis enim sapiente nulla.
             <div className="button-group">
-              <Button type="primary" />
-              <Button type="secondary" />
+              <Button type="primary">Primary Button</Button>
+              <Button type="secondary">Secondary Button</Button>
             </div>
           </div>
         </div>

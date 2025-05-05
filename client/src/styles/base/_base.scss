@@ -4,7 +4,7 @@
 * {
   // Conditional styling using @if
   @if $debug-lines == true {
-    outline: 1px solid violet;
+    outline: 1px solid rgba(255, 0, 0, 0.386)
   } @else {
     outline: transparent;
   }

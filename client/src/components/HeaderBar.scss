@@ -2,20 +2,45 @@
 
 .header-bar {
   background-color: $primary;
-  padding: $element-spacing;
   width: 100%;
+  height: $element-height;
   color: $white;
   display: flex;
   flex-direction: row;
+  // padding-inline: $section-padding;
   align-items: center;
-  justify-content: center;
-  gap: $element-spacing;
+  justify-content: space-between;
+  // gap: $element-spacing;
 
-  & > .logo {
-    width: auto;
-    height: 25px;
-    object-fit: contain;
-    object-position: center;
-    margin-right: auto;
+  & > .logo-container {
+    aspect-ratio: 1 / 1;
+    height: 100%;
+
+    & > .logo {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+      object-position: center;
+      scale: 0.5;
+    }
+  }
+
+  & > .location {
+  }
+
+  & > .hamburger {
+    aspect-ratio: 1 / 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    .bar {
+      background-color: $white;
+      height: 3px;
+      width: 40px;
+    }
   }
 }
