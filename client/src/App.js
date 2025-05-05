@@ -1,4 +1,5 @@
 import Button from "./components/Button";
+import FooterBar from "./components/FooterBar";
 import HeaderBar from "./components/HeaderBar";
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
             </div>
           </div>
         </div>
+        <FooterBar />
       </div>
     </div>
   );

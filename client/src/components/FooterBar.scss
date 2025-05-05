@@ -1,0 +1,11 @@
+@use "../styles/abstracts/index" as *;
+
+.footer-bar {
+  border-top: 1px solid $grey80;
+  width: 100%;
+  color: $grey60;
+  display: flex;
+  justify-content: end;
+
+  padding: $section-padding;
+}
