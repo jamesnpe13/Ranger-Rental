@@ -1,0 +1,21 @@
+@use "../styles/abstracts/index" as *;
+
+.header-bar {
+  background-color: $primary;
+  padding: $element-spacing;
+  width: 100%;
+  color: $white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: $element-spacing;
+
+  & > .logo {
+    width: auto;
+    height: 25px;
+    object-fit: contain;
+    object-position: center;
+    margin-right: auto;
+  }
+}

@@ -1,0 +1,36 @@
+@use "../abstracts/index" as *;
+
+.frame {
+  width: 100vw;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__container {
+    width: 100%;
+    max-width: $frame__container-maxwidth;
+    height: 100%;
+    overflow-y: scroll;
+
+    & > .section {
+      height: max-content;
+      width: 100%;
+      padding: $section-padding;
+
+      &.double-column {
+        display: flex;
+        gap: $section-padding;
+
+        & > * {
+          flex: 1;
+        }
+      }
+
+      &__container {
+      }
+    }
+  }
+}

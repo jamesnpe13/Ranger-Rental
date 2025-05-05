@@ -1,0 +1,9 @@
+{
+  "short_name": "Ranger Rental",
+  "name": "Ranger Rental",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "scope": "/"
+}

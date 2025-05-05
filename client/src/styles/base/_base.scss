@@ -1,1 +1,11 @@
 @use "../abstracts/index" as *;
+
+// debug lines temporary
+* {
+  // Conditional styling using @if
+  @if $debug-lines == true {
+    outline: 1px solid violet;
+  } @else {
+    outline: transparent;
+  }
+}

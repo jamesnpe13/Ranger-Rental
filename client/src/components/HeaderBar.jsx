@@ -1,0 +1,16 @@
+import React from "react";
+import "./HeaderBar.scss";
+import simpleWhiteLogo from "../assets/images/logo-white-simple.png";
+
+export default function HeaderBar() {
+  return (
+    <div className="header-bar">
+      <img
+        className="logo"
+        src={simpleWhiteLogo}
+        alt="logo"
+      />
+      <p>Header Bar</p>
+    </div>
+  );
+}
