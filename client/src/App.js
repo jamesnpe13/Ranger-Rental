@@ -1,6 +1,7 @@
 import Button from "./components/Button";
 import FooterBar from "./components/FooterBar";
 import HeaderBar from "./components/HeaderBar";
+import InputField from "./components/InputField";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
             reiciendis enim sapiente nulla.
             <div className="button-group">
               <Button type="primary">Primary Button</Button>
-              <Button type="secondary">Secondary Button</Button>
+              {/* <Button type="secondary">Secondary Button</Button> */}
             </div>
           </div>
         </div>
@@ -45,6 +46,7 @@ function App() {
               <Button type="primary" />
               <Button type="secondary" />
             </div>
+            <InputField />
           </div>
         </div>
         <FooterBar />

@@ -1,0 +1,11 @@
+@use "../styles/abstracts/index" as *;
+
+.input-field {
+  height: $control-element-height;
+  border: 1.5px solid $grey40;
+  border-radius: $border-radius-small;
+  padding-inline: 10px;
+  display: flex;
+  align-items: center;
+  color: $grey40;
+}

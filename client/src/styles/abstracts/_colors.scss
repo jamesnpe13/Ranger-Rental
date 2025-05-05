@@ -1,6 +1,6 @@
 @use "sass:color";
 
-$primary: #131313;
+$primary: #222222;
 $secondary: #4387e0;
 $tertiary: orange;
 
@@ -10,8 +10,8 @@ $success: #2fd44b;
 $neutral: #4387e0;
 $warning: #efaa6e;
 
-$black: #131313;
-$white: rgb(247, 247, 247);
+$black: #222222;
+$white: #e1e1e1;
 $grey20: color.mix($white, $black, 20%);
 $grey40: color.mix($white, $black, 40%);
 $grey60: color.mix($white, $black, 60%);
