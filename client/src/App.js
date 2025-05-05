@@ -1,4 +1,5 @@
 import Button from "./components/Button";
+import Chip from "./components/Chip";
 import FooterBar from "./components/FooterBar";
 import HeaderBar from "./components/HeaderBar";
 import InputField from "./components/InputField";
@@ -28,7 +29,7 @@ function App() {
             </div>
           </div>
         </div>
-
+        <hr />
         <div className="section">
           <div className="section__container">
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime
@@ -56,10 +57,29 @@ function App() {
             <InputField placeholder="Enter a keyword" />
           </div>
         </div>
-
+        <hr />
         <div className="section">
           <div style={{ width: "80%" }}>
             <InputField placeholder="Filter vehicles" />
+          </div>
+        </div>
+
+        <hr />
+
+        <div className="section">
+          <h4>Filters</h4>
+          <br />
+          <div className="chip-group">
+            <Chip label="Blue" />
+            <Chip label="FWD" />
+            <Chip label="Hatchback" />
+            <Chip label="Manual" />
+            <Chip label="New" />
+            <Chip label="Blue" />
+            <Chip label="Hatchback" />
+            <Chip label="New" />
+            <Chip label="Manual" />
+            <Chip label="FWD" />
           </div>
         </div>
         <FooterBar />

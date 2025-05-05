@@ -1,0 +1,21 @@
+@use "../styles/abstracts/index" as *;
+
+.chip-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip {
+  background-color: $grey60;
+  height: 25px;
+  padding-inline: 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  width: max-content;
+
+  & > span {
+    color: $white;
+  }
+}
