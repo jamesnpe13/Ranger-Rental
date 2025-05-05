@@ -48,15 +48,18 @@ function App() {
               <Button type="tertiary">Tertiary</Button>
             </div>
             <div className="button-group">
+              <Button type="destructive">Destructive</Button>
+            </div>
+            <div className="button-group">
               <Button type="text">Text button</Button>
             </div>
-            <InputField />
+            <InputField placeholder="Enter a keyword" />
           </div>
         </div>
 
         <div className="section">
           <div style={{ width: "80%" }}>
-            <InputField />
+            <InputField placeholder="Filter vehicles" />
           </div>
         </div>
         <FooterBar />

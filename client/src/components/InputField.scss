@@ -17,7 +17,11 @@
   border-radius: $border-radius-small;
   padding-inline: 10px;
   display: flex;
+  color: $black;
   align-items: center;
-  color: $grey40;
   background-color: white;
+
+  &::placeholder {
+    color: $grey40;
+  }
 }
