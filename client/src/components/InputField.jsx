@@ -1,10 +1,18 @@
 import React from "react";
+import Button from "./Button";
 import "./InputField.scss";
 
-export default function InputField() {
+export default function InputField(props) {
   return (
-    <div className="input-field">
-      <span>Input Field</span>
+    <div className="input-group">
+      <input
+        type={props.type ?? "text"}
+        id={props.id ?? ""}
+        name={props.name ?? ""}
+        className="input-field"
+        placeholder={props.placeholder ?? "Placeholder"}
+      />
+      <Button type={props.buttonType ?? "tertiary"}></Button>
     </div>
   );
 }

@@ -43,9 +43,19 @@ function App() {
             nesciunt unde suscipit exercitationem. Quidem ipsum dolorem,
             reiciendis enim sapiente nulla.
             <div className="button-group">
-              <Button type="primary" />
-              <Button type="secondary" />
+              <Button type="primary">Primary</Button>
+              <Button type="secondary">Secondary</Button>
+              <Button type="tertiary">Tertiary</Button>
             </div>
+            <div className="button-group">
+              <Button type="text">Text button</Button>
+            </div>
+            <InputField />
+          </div>
+        </div>
+
+        <div className="section">
+          <div style={{ width: "80%" }}>
             <InputField />
           </div>
         </div>

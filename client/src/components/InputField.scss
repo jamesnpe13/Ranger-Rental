@@ -1,11 +1,23 @@
 @use "../styles/abstracts/index" as *;
 
+.input-group {
+  display: flex;
+  width: 100%;
+  gap: calc($element-spacing / 2);
+
+  & > .button {
+    width: max-content;
+  }
+}
+
 .input-field {
   height: $control-element-height;
-  border: 1.5px solid $grey40;
+  width: 100%;
+  outline: 1.5px solid $grey60;
   border-radius: $border-radius-small;
   padding-inline: 10px;
   display: flex;
   align-items: center;
   color: $grey40;
+  background-color: white;
 }

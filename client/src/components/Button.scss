@@ -1,7 +1,7 @@
 @use "../styles/abstracts/index" as *;
 
 .button-group {
-  padding-block: $element-spacing;
+  padding: $component-spacing;
   display: flex;
   gap: calc($element-spacing / 2);
 
@@ -16,40 +16,50 @@
   &.column {
     flex-direction: column;
   }
+}
+.button {
+  background-color: $greyed-out;
+  color: $white;
+  font-weight: 600;
+  width: inherit;
+  height: $control-element-height;
+  border-radius: $border-radius-small;
+  cursor: pointer;
+  user-select: none;
+  display: grid;
+  place-items: center;
+  padding-inline: $element-spacing;
 
-  .button {
+  &.primary {
+    background-color: $primary;
+    color: $white;
+  }
+  &.secondary {
+    background-color: $secondary;
+    color: $white;
+  }
+  &.tertiary {
+    background-color: $white;
+    outline: 1.5px solid $grey60;
+    color: $black;
+  }
+  &.destructive {
+    background-color: $destructive;
+    color: $white;
+  }
+  &.greyed-out {
     background-color: $greyed-out;
     color: $white;
-    font-weight: 600;
-    width: inherit;
-    height: $control-element-height;
-    border-radius: $border-radius-small;
-    cursor: pointer;
-    user-select: none;
-    display: grid;
-    place-items: center;
+  }
+  &.text {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    font-weight: 400;
+    color: inherit;
 
-    &.primary {
-      background-color: $primary;
-      color: $white;
-    }
-    &.secondary {
-      background-color: $secondary;
-      color: $white;
-    }
-    &.destructive {
-      background-color: $destructive;
-      color: $white;
-    }
-    &.greyed-out {
-      background-color: $greyed-out;
-      color: $white;
-    }
-    &.text {
-      background-color: transparent;
-      padding: 0;
-      margin: 0;
-      color: inherit;
+    & > span {
+      font-size: 0.8rem;
     }
   }
 }
