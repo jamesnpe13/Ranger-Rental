@@ -16,3 +16,5 @@ $grey20: color.mix($white, $black, 20%);
 $grey40: color.mix($white, $black, 40%);
 $grey60: color.mix($white, $black, 60%);
 $grey80: color.mix($white, $black, 80%);
+
+$highlight-secondary: color.mix($white, $secondary, 60%);

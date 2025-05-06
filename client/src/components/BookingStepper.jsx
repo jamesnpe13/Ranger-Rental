@@ -14,7 +14,7 @@ export default function BookingStepper() {
     <section className="booking-stepper">
       <div className="stepper-group">
         <Stepper
-          activeStep={0}
+          activeStep={2}
           alternativeLabel
         >
           {steps.map((label) => (
