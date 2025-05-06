@@ -8,7 +8,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: $white;
 
   &__container {
     width: 100%;
@@ -16,23 +15,24 @@
     height: 100%;
     overflow-x: inherit;
     overflow-y: scroll;
+    background-color: $white;
+  }
+}
 
-    & > .section {
-      height: max-content;
-      width: 100%;
-      padding: $section-padding;
+section {
+  height: max-content;
+  width: 100%;
+  padding: $section-padding;
 
-      &.double-column {
-        display: flex;
-        gap: $section-padding;
+  &.double-column {
+    display: flex;
+    gap: $section-padding;
 
-        & > * {
-          flex: 1;
-        }
-      }
-
-      &__container {
-      }
+    & > * {
+      flex: 1;
     }
+  }
+
+  &__container {
   }
 }

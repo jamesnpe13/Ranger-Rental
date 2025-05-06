@@ -12,7 +12,7 @@ export default function InputField(props) {
         className="input-field"
         placeholder={props.placeholder ?? "Placeholder"}
       />
-      <Button type={props.buttonType ?? "tertiary"}></Button>
+      <Button type={props.buttonType ?? "tertiary"}>{props.buttonLabel}</Button>
     </div>
   );
 }

@@ -4,12 +4,15 @@
 * {
   // Conditional styling using @if
   @if $debug-lines == true {
-    outline: 1px solid rgba(255, 0, 0, 0.386)
+    outline: 1px solid rgba(255, 0, 0, 0.386);
   } @else {
     outline: transparent;
   }
 }
 
 body {
-  background-color: $black;
+}
+
+hr {
+  border-top: 0.5px solid $grey80;
 }

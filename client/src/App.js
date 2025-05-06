@@ -1,3 +1,4 @@
+import BookingStepper from "./components/BookingStepper";
 import Button from "./components/Button";
 import Chip from "./components/Chip";
 import FooterBar from "./components/FooterBar";
@@ -10,7 +11,29 @@ function App() {
       <HeaderBar />
 
       <div className="frame__container">
-        <div className="section">
+        <BookingStepper />
+        <section>
+          <InputField
+            placeholder="Enter a keyword"
+            buttonType="tertiary"
+            buttonLabel="Search"
+          />
+          <br />
+          <div className="chip-group">
+            <Chip label="Blue" />
+            <Chip label="FWD" />
+            <Chip label="Hatchback" />
+            <Chip label="Manual" />
+            <Chip label="New" />
+            <Chip label="Blue" />
+            <Chip label="Hatchback" />
+            <Chip label="New" />
+            <Chip label="Auckland" />
+            <Chip label="Available" />
+          </div>
+        </section>
+        <hr />
+        <section>
           <div className="section__container">
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime
             consequatur ad minus a cum, blanditiis deserunt nam veritatis earum
@@ -28,9 +51,9 @@ function App() {
               {/* <Button type="secondary">Secondary Button</Button> */}
             </div>
           </div>
-        </div>
+        </section>
         <hr />
-        <div className="section">
+        <section>
           <div className="section__container">
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime
             consequatur ad minus a cum, blanditiis deserunt nam veritatis earum
@@ -54,34 +77,17 @@ function App() {
             <div className="button-group">
               <Button type="text">Text button</Button>
             </div>
-            <InputField placeholder="Enter a keyword" />
           </div>
-        </div>
+        </section>
         <hr />
-        <div className="section">
+        <section>
           <div style={{ width: "80%" }}>
             <InputField placeholder="Filter vehicles" />
           </div>
-        </div>
+        </section>
 
         <hr />
 
-        <div className="section">
-          <h4>Filters</h4>
-          <br />
-          <div className="chip-group">
-            <Chip label="Blue" />
-            <Chip label="FWD" />
-            <Chip label="Hatchback" />
-            <Chip label="Manual" />
-            <Chip label="New" />
-            <Chip label="Blue" />
-            <Chip label="Hatchback" />
-            <Chip label="New" />
-            <Chip label="Manual" />
-            <Chip label="FWD" />
-          </div>
-        </div>
         <FooterBar />
       </div>
     </div>

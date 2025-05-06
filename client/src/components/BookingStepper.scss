@@ -1,0 +1,48 @@
+@use "../styles/abstracts/index" as *;
+
+.booking-stepper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $element-spacing;
+  border-bottom: 1px solid $grey80;
+  position: relative;
+  background-color: white;
+
+  .button-group  {
+    padding: unset;
+  }
+
+  .css-xijkab-MuiStepper-root {
+    width: 100%;
+  }
+
+  .MuiSvgIcon-root {
+    circle {
+      fill: $grey80;
+    }
+  }
+
+  .Mui-completed {
+    path {
+        fill: $success;
+    }
+  }
+
+  .css-12eb3rq-MuiStepLabel-label {
+    font-size: 0.7rem;
+  }
+
+  .css-12eb3rq-MuiStepLabel-label.Mui-active,
+  .MuiSvgIcon-root.Mui-active circle {
+    color: $secondary;
+    fill: $secondary;
+  }
+
+  & > div {
+    height: max-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
