@@ -1,18 +1,21 @@
 import { BrowserRouter } from "react-router-dom";
-import BookingStepper from "./components/BookingStepper";
-import Button from "./components/Button";
-import Chip from "./components/Chip";
-import FooterBar from "./components/FooterBar";
-import HeaderBar from "./components/HeaderBar";
-import InputField from "./components/InputField";
 import AppRoutes from "./routes/AppRoutes";
+import HeaderBar from "./components/HeaderBar";
+import FooterBar from "./components/FooterBar";
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <div className="grid-container">
+        <HeaderBar />
+        <main>
+          <div className="page-container">
+            {/* This is where pages go */}
+            <AppRoutes />
+          </div>
+          <FooterBar />
+        </main>
+      </div>
     </BrowserRouter>
   );
 }
-
-export default App;

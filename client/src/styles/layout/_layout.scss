@@ -1,38 +1,89 @@
 @use "../abstracts/index" as *;
 
-.frame {
-  width: 100vw;
+html,
+body {
   height: 100dvh;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  &__container {
-    width: 100%;
-    max-width: $frame__container-maxwidth;
-    height: 100%;
-    overflow-x: inherit;
-    overflow-y: scroll;
-    background-color: $white;
-  }
+  width: 100vw;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
-section {
-  height: max-content;
-  width: 100%;
-  padding: $section-padding;
+body {
+  .grid-container {
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 
-  &.double-column {
-    display: flex;
-    gap: $section-padding;
+    .header-bar {
+    }
 
-    & > * {
-      flex: 1;
+    main {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background-color: $black;
+      overscroll-behavior-block: auto;
+
+      .page {
+        border: 3px solid red;
+        height: 100%;
+        width: 100%;
+
+        section {
+          padding: $section-padding;
+          border: 3px solid green;
+        }
+      }
+
+      .page-container {
+        background-color: $white;
+      }
+
+      .footerBar {
+      }
     }
   }
-
-  &__container {
-  }
 }
+
+// main {
+//   border: 5px solid red;
+//   height: 100dvh;
+// }
+
+// .frame {
+//   width: 100vw;
+//   height: 100dvh;
+//   overflow-x: hidden;
+//   overflow-y: hidden;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+
+//   &__container {
+//     width: 100%;
+//     max-width: $frame__container-maxwidth;
+//     height: 100%;
+//     overflow-x: inherit;
+//     overflow-y: scroll;
+//     background-color: $white;
+//   }
+// }
+
+// section {
+//   height: max-content;
+//   width: 100%;
+//   padding: $section-padding;
+
+//   &.double-column {
+//     display: flex;
+//     gap: $section-padding;
+
+//     & > * {
+//       flex: 1;
+//     }
+//   }
+
+//   &__container {
+//   }
+// }
