@@ -1,18 +1,20 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Link } from "react-router-dom";
 import Home from "../pages/Home";
 import SignIn from "../pages/SignIn";
 import Register from "../pages/Register";
 import NotFound from "../pages/NotFound";
+import routes from "./Routes";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/home" replace />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="*" element={<NotFound />} />
+      {routes.map(({ path, element }) => (
+        <Route key={path} path={path} element={element} />
+      ))}
+
+      <Route path={"/"} element={<Navigate to="/home" replace />} />
+      <Route path={"*"} element={<NotFound />} />
     </Routes>
   );
 }
