@@ -26,13 +26,11 @@ body {
       overscroll-behavior-block: auto;
 
       .page {
-        border: 3px solid red;
         height: 100%;
         width: 100%;
 
         section {
           padding: $section-padding;
-          border: 3px solid green;
         }
       }
 

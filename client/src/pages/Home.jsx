@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="page">
       <section>
-        <p>Section 1</p>
+        <p>Home</p>
       </section>
     </div>
   );
