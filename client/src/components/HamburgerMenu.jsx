@@ -10,8 +10,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import { Link } from "react-router-dom";
+import routes from "../routes/Routes";
 
 export default function HamburgerMenu() {
   const [open, setOpen] = React.useState(false);
@@ -34,36 +34,14 @@ export default function HamburgerMenu() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem
-            key={text}
-            disablePadding
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
+        {routes.map((route) => (
+          <ListItemButton key={route.path} component={Link} to={route.path}>
+            <ListItemIcon>{route.icon}</ListItemIcon>
+            <ListItemText primary={route.label} />
+          </ListItemButton>
         ))}
       </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem
-            key={text}
-            disablePadding
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      {/* <Divider /> */}
     </Box>
   );
   return (
@@ -71,11 +49,7 @@ export default function HamburgerMenu() {
       <Button onClick={toggleDrawer(true)}>
         <MenuIcon sx={{ color: "white" }} />
       </Button>
-      <Drawer
-        anchor="right"
-        open={open}
-        onClose={toggleDrawer(false)}
-      >
+      <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
         {drawerContent}
       </Drawer>
     </div>
