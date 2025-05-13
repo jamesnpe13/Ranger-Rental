@@ -1,0 +1,8 @@
+// Load partials (utility/helper)
+@use "./abstracts/index" as abstracts;
+
+// Load base/global styles
+@use "./base/index" as base;
+
+// Load layouts
+@use "./layout/index" as layout;
