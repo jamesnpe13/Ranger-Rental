@@ -1,6 +1,7 @@
-import React from "react";
+import * as React from "react";
 import "./HeaderBar.scss";
-import simpleWhiteLogo from "../assets/images/logo-white-simple.png";
+import HamburgerMenu from "./HamburgerMenu";
+import logo from "../assets/images/logo-white-simple.png";
 
 export default function HeaderBar() {
   return (
@@ -8,18 +9,12 @@ export default function HeaderBar() {
       <div className="logo-container">
         <img
           className="logo"
-          src={simpleWhiteLogo}
-          alt="logo"
+          src={logo}
+          alt=""
         />
       </div>
-
-      <p className="location">Location</p>
-
-      <div className="hamburger">
-        <div className="bar" />
-        <div className="bar" />
-        <div className="bar" />
-      </div>
+      <p className="location">Ranger Rental</p>
+      <HamburgerMenu />
     </div>
   );
 }

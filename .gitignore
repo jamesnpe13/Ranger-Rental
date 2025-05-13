@@ -1,6 +1,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node,react,visualstudiocode,flask,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,react,visualstudiocode,flask,python
 
+
+### Launch.json
+.vscode/
+
+
 ### Flask ###
 instance/*
 !instance/.gitignore

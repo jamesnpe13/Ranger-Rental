@@ -6,24 +6,24 @@ body {
   color: $black;
 }
 h1 {
-  font-size: 2rem;
+  font-size: calc(2rem * $font-size-scale);
 }
 h2 {
-  font-size: 1.6rem;
+  font-size: calc(1.6rem * $font-size-scale);
 }
 h3 {
-  font-size: 1.4rem;
+  font-size: calc(1.4rem * $font-size-scale);
 }
 h4 {
-  font-size: 1.2rem;
+  font-size: calc(1.2rem * $font-size-scale);
 }
 p,
 span,
 i,
 input {
-  font-size: 1rem;
+  font-size: calc(1rem * $font-size-scale);
 
   &.sub {
-    font-size: 0.8rem;
+    font-size: calc(0.8rem * $font-size-scale);
   }
 }
