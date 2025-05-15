@@ -18,3 +18,7 @@ body {
 hr {
   border-top: 0.5px solid $grey80;
 }
+
+.MuiButtonBase-root.active {
+  color: $secondary;
+}
