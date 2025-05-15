@@ -10,7 +10,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import routes from "../routes/Routes";
 
 export default function HamburgerMenu() {
@@ -35,7 +35,7 @@ export default function HamburgerMenu() {
     >
       <List>
         {routes.map((route) => (
-          <ListItemButton key={route.path} component={NavLink} to={route.path}>
+          <ListItemButton key={route.path} component={Link} to={route.path}>
             <ListItemIcon>{route.icon}</ListItemIcon>
             <ListItemText primary={route.label} />
           </ListItemButton>
@@ -50,10 +50,6 @@ export default function HamburgerMenu() {
         <MenuIcon sx={{ color: "white" }} />
       </Button>
       <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-        <div className="drawer-header">
-          <h4>Ranger Rental</h4>
-        </div>
-        <Divider />
         {drawerContent}
       </Drawer>
     </div>
