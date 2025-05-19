@@ -6,24 +6,23 @@ body {
   color: $black;
 }
 h1 {
-  font-size: calc(2rem * $font-size-scale);
+  font-size: calc($fontsize-xxlarge * $font-size-scale);
 }
 h2 {
-  font-size: calc(1.6rem * $font-size-scale);
+  font-size: calc($fontsize-xlarge * $font-size-scale);
 }
 h3 {
-  font-size: calc(1.4rem * $font-size-scale);
+  font-size: calc($fontsize-large * $font-size-scale);
 }
 h4 {
-  font-size: calc(1.2rem * $font-size-scale);
+  font-size: calc($fontsize-medium * $font-size-scale);
 }
 p,
 span,
-i,
-input {
-  font-size: calc(1rem * $font-size-scale);
+i {
+  font-size: calc($fontsize-small * $font-size-scale);
 
   &.sub {
-    font-size: calc(0.8rem * $font-size-scale);
+    font-size: calc($fontsize-xsmall * $font-size-scale);
   }
 }

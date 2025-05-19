@@ -24,7 +24,7 @@ export default function Home() {
             >
               Sign In
             </Button>
-            <Button type="text">CREATE AN ACCOUNT</Button>
+            <Button type="text">Create an account</Button>
           </div>
         </section>
       </div>

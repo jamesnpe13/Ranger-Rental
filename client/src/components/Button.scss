@@ -75,9 +75,8 @@
       display: flex;
       justify-content: left;
     }
-
-    & > span {
-      font-size: 0.8rem;
-    }
+  }
+  & > span {
+    font-size: $fontsize-small;
   }
 }
