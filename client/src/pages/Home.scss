@@ -1,0 +1,27 @@
+@use "../styles/abstracts/index" as *;
+
+.page#home {
+  section#hero {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+
+    .image-container {
+      width: 100%;
+      display: grid;
+      place-items: center;
+      margin-top: 50px;
+
+      img {
+        width: inherit;
+        max-width: 200px;
+      }
+    }
+
+    .cta-button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}
