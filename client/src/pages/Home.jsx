@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Home.scss";
 import LogoFull from "../assets/images/logo-black-full.png";
 import Button from "../components/Button";
