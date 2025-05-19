@@ -5,9 +5,10 @@ export default function Button({
   props,
   type = "greyed-out",
   children = "Button",
+  onClick,
 }) {
   return (
-    <div className={`button ${type}`}>
+    <div onClick={onClick} className={`button ${type}`}>
       <span>{children}</span>
     </div>
   );

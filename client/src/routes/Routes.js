@@ -8,12 +8,14 @@ const routes = [
   {
     path: "/home",
     label: "Home",
+    locationLabel: "Ranger Rental",
     element: <Home />,
     icon: <HomeIcon />,
   },
   {
     path: "/signin",
     label: "Sign In",
+    locationLabel: "Sign In",
     element: <SignIn />,
     icon: <AccountBoxIcon />,
   },

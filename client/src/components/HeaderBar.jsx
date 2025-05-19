@@ -10,7 +10,7 @@ export default function HeaderBar() {
   const navigate = useNavigate();
 
   const match = routes.find((route) => route.path === location.pathname);
-  const label = match ? match.label : "Unknown Page";
+  const label = match ? match.locationLabel : "Unknown Page";
 
   return (
     <div className="header-bar">

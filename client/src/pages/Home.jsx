@@ -1,9 +1,12 @@
 import React from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import "./Home.scss";
 import LogoFull from "../assets/images/logo-black-full.png";
 import Button from "../components/Button";
 
 export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="page" id="home">
       {/* hero section */}
@@ -13,7 +16,14 @@ export default function Home() {
             <img src={LogoFull} alt="" />
           </div>
           <div className="cta-button-group">
-            <Button type="primary">Sign In</Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                navigate("/signin");
+              }}
+            >
+              Sign In
+            </Button>
             <Button type="text">CREATE AN ACCOUNT</Button>
           </div>
         </section>
