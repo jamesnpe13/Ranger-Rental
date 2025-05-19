@@ -1,0 +1,30 @@
+@use "../styles/abstracts/index" as *;
+
+.page#sign-in {
+  section#form {
+    .image-container {
+      width: 100%;
+      outline: 1px soldi red;
+      img {
+        width: 150px;
+      }
+    }
+
+    h2 {
+      margin-block: 20px;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .extra-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}

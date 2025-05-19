@@ -57,6 +57,24 @@
     margin: 0;
     font-weight: 400;
     color: inherit;
+    height: auto;
+
+    &.left {
+      display: flex;
+      justify-content: left;
+    }
+    &.right {
+      display: flex;
+      justify-content: right;
+    }
+    &.center {
+      display: flex;
+      justify-content: center;
+    }
+    &.left {
+      display: flex;
+      justify-content: left;
+    }
 
     & > span {
       font-size: 0.8rem;

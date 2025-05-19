@@ -13,7 +13,7 @@ export default function Home() {
             <img src={LogoFull} alt="" />
           </div>
           <div className="cta-button-group">
-            <Button type="primary">Log in</Button>
+            <Button type="primary">Sign In</Button>
             <Button type="text">CREATE AN ACCOUNT</Button>
           </div>
         </section>

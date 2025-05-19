@@ -1,6 +1,8 @@
 // Routes.js
 import Home from "../pages/Home";
+import SignIn from "../pages/SignIn";
 import HomeIcon from "@mui/icons-material/Home";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
 
 const routes = [
   {
@@ -8,6 +10,12 @@ const routes = [
     label: "Home",
     element: <Home />,
     icon: <HomeIcon />,
+  },
+  {
+    path: "/signin",
+    label: "Sign In",
+    element: <SignIn />,
+    icon: <AccountBoxIcon />,
   },
 ];
 

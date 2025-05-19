@@ -1,3 +1,5 @@
+// set hasButton="true" to render button
+
 import React from "react";
 import Button from "./Button";
 import "./InputField.scss";
@@ -12,8 +14,11 @@ export default function InputField(props) {
         className="input-field"
         placeholder={props.placeholder ?? "Placeholder"}
       />
-      <Button type={props.buttonType ?? "tertiary"}>{props.buttonLabel}</Button>
+      {props.hasButton && (
+        <Button type={props.buttonType ?? "tertiary"}>
+          {props.buttonLabel}
+        </Button>
+      )}
     </div>
   );
 }
- 
