@@ -1,15 +1,14 @@
 import React from "react";
 import "./Button.scss";
 
-export default function Button({
-  props,
-  type = "greyed-out",
-  children = "Button",
-  onClick,
-}) {
+export default function Button(props) {
   return (
-    <div onClick={onClick} className={`button ${type}`}>
-      <span>{children}</span>
-    </div>
+    <button
+      type={props.buttonType}
+      onClick={props.onClick}
+      className={`button ${props.type}`}
+    >
+      <span>{props.children}</span>
+    </button>
   );
 }

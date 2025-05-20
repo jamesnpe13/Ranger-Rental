@@ -17,7 +17,8 @@
     flex-direction: column;
   }
 }
-.button {
+button {
+  all: unset;
   background-color: $greyed-out;
   color: $white;
   font-weight: 600;

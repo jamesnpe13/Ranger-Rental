@@ -13,11 +13,13 @@ export default function SignIn() {
             <img src={LogoFull} alt="" />
           </div>
           <h2>Customer Sign In</h2>
-          <div className="form">
+          <form className="form">
             <InputField type="text" placeholder="Email" />
             <InputField type="password" placeholder="Password" />
-            <Button type="primary">Sign In</Button>
-          </div>
+            <Button type="primary" buttonType="submit">
+              Sign In
+            </Button>
+          </form>
           <div className="extra-buttons">
             <Button type="text left">Forgot password</Button>
             <Button type="text left">Create account</Button>
