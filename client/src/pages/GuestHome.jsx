@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Home.scss";
 import LogoFull from "../assets/images/logo-black-full.png";
 import Button from "../components/Button";
+import VehicleListings from "components/VehicleListings";
 
 export default function GuestHome() {
   const navigate = useNavigate();
@@ -24,8 +25,11 @@ export default function GuestHome() {
             >
               Sign In
             </Button>
-            <Button type="text">Create an account</Button>
+            {/* <Button type="text">Create an account</Button> */}
           </div>
+        </section>
+        <section id="vehicles">
+          <VehicleListings />
         </section>
       </div>
     </div>

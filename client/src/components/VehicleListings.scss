@@ -1,0 +1,16 @@
+@use "../styles/abstracts/index" as *;
+
+.vehicle-list-container {
+  // border: 5px solid red;
+  width: 100%;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+  .vehicle-list-item {
+    height: 200px;
+    border-radius: $border-radius-small;
+    border: 1.5px solid $secondary;
+    padding: 10px;
+  }
+}
