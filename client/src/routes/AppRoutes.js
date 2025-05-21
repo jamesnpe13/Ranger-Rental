@@ -1,8 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate, Link } from "react-router-dom";
-import Home from "../pages/Home";
-import SignIn from "../pages/SignIn";
-import Register from "../pages/Register";
+import { Routes, Route, Navigate } from "react-router-dom";
 import NotFound from "../pages/NotFound";
 import routes from "./Routes";
 

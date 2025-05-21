@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <a href="{{ url_for('admin_ui.users') }}" class="text-decoration-none text-dark">
+                <div class="card h-100 hover-shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                        <h3 class="h4">Users</h3>
+                        <p class="text-muted">Manage application users</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <a href="{{ url_for('admin_ui.vehicles') }}" class="text-decoration-none text-dark">
+                <div class="card h-100 hover-shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-car fa-3x mb-3 text-success"></i>
+                        <h3 class="h4">Vehicles</h3>
+                        <p class="text-muted">Manage vehicle listings</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <a href="{{ url_for('admin_ui.bookings') }}" class="text-decoration-none text-dark">
+                <div class="card h-100 hover-shadow">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-check fa-3x mb-3 text-info"></i>
+                        <h3 class="h4">Bookings</h3>
+                        <p class="text-muted">View and manage bookings</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.hover-shadow {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}

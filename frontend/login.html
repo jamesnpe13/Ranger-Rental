@@ -70,11 +70,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Ranger Rental - Login</h1>
-        <form id="login-form">
+        <h1>Ranger Rental - Admin Login</h1>
+        <form id="login-form" action="/admin/login" method="POST">
+            <input type="hidden" name="csrf_token" id="csrf_token">
             <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
             </div>
             <div>
                 <label for="password">Password:</label>
@@ -83,56 +84,88 @@
             <button type="submit">Login</button>
         </form>
         <div id="message-container"></div>
-        <div class="register-link" style="text-align: center; margin-top: 15px;">
-            <p>Don't have an account? <a href="register.html" style="color: #007bff; text-decoration: none;">Register here</a></p>
-        </div>
     </div>
 
     <script>
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Function to show messages
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.textContent = message;
+            messageContainer.className = ''; // Clear existing classes
+            messageContainer.classList.add(`${type}-message`);
+        }
+
+        // Set CSRF token in the form
+        document.addEventListener('DOMContentLoaded', function() {
+            const csrfToken = getCookie('csrf_token') || '';
+            document.getElementById('csrf_token').value = csrfToken;
+        });
+
         const loginForm = document.getElementById('login-form');
         const messageContainer = document.getElementById('message-container');
 
         loginForm.addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent default form submission
-
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            
+            // Show loading state
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Logging in...';
             
             messageContainer.innerHTML = ''; // Clear previous messages
             messageContainer.className = ''; // Clear previous classes
-
+            
+            // Get form data
+            const formData = new FormData(loginForm);
+            
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/login', {
+                // Submit the form data
+                const response = await fetch(loginForm.action, {
                     method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin', // Include cookies
                     headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
                 });
-
+                
                 const data = await response.json();
-
+                
                 if (response.ok) {
-                    messageContainer.textContent = data.message || 'Login successful!';
-                    messageContainer.classList.add('success-message');
-                    
-                    // Store user info in localStorage
-                    localStorage.setItem('ranger_rental_username', data.username);
-                    localStorage.setItem('ranger_rental_user_role', data.role);
-
-                    // Redirect to index.html after a short delay
+                    // Login successful, redirect to dashboard
+                    showMessage('Login successful! Redirecting...', 'success');
                     setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1500);
-
+                        window.location.href = '/admin/dashboard';
+                    }, 1000);
                 } else {
-                    messageContainer.textContent = data.message || 'Login failed. Please try again.';
-                    messageContainer.classList.add('error-message');
+                    // Show error message
+                    showMessage(data.error || 'Login failed. Please try again.', 'error');
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                messageContainer.textContent = 'An error occurred during login. Please check the console.';
-                messageContainer.classList.add('error-message');
+                showMessage('An error occurred. Please try again.', 'error');
+            } finally {
+                // Reset button state
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
             }
         });
     </script>

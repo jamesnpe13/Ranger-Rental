@@ -1,16 +1,492 @@
+// ===========================================
+// 1. Colors
+// ===========================================
+// Base colors
+$black: #222222;
+$white: #f9f9f9;
+
+// Primary colors
+$primary-50: #f0f9ff;
+$primary-100: #e0f2fe;
+$primary-200: #bae6fd;
+$primary-300: #7dd3fc;
+$primary-400: #38bdf8;
+$primary-500: #0ea5e9;
+$primary-600: #0284c7;
+$primary-700: #0369a1;
+$primary-800: #075985;
+$primary-900: #0c4a6e;
+$primary: $primary-500;
+
+// Secondary colors (different from primary for better distinction)
+$secondary-50: #f5f3ff;
+$secondary-100: #ede9fe;
+$secondary-200: #ddd6fe;
+$secondary-300: #c4b5fd;
+$secondary-400: #a78bfa;
+$secondary-500: #8b5cf6;
+$secondary-600: #7c3aed;
+$secondary-700: #6d28d9;
+$secondary-800: #5b21b6;
+$secondary-900: #4c1d95;
+$secondary: $secondary-600;
+
+// Grayscale
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+
+// Semantic colors
+$success: #10b981;
+$warning: #f59e0b;
+$danger: #ef4444;
+$info: #3b82f6;
+
+// Text colors
+$text-muted: $gray-600;
+$text-primary: $gray-900;
+$text-secondary: $gray-600;
+
+// Background colors
+$background: $white;
+$background-alt: $gray-50;
+
+// Border colors
+$border-color: $gray-200;
+
+// ===========================================
+// 2. Debug & Layout
+// ===========================================
 $debug-lines: false;
 $font-size-scale: 1;
-$frame__container-maxwidth: 1200px;
+$frame__container-maxwidth: 1400px;
+$section-padding: 1.5rem;
+$element-spacing: 1.25rem;
+$component-spacing: 0.625rem 0;
 
-$section-padding: 20px;
-$element-spacing: 20px;
-$component-spacing: 10px 0px;
+// ===========================================
+// 2. Spacing & Sizing
+// ===========================================
+$spacing-xxs: 0.25rem;   // 4px
+$spacing-xs: 0.5rem;     // 8px
+$spacing-sm: 0.75rem;    // 12px
+$spacing-md: 1rem;       // 16px
+$spacing-lg: 1.5rem;     // 24px
+$spacing-xl: 2rem;       // 32px
+$spacing-2xl: 3rem;      // 48px
+$spacing-3xl: 4rem;      // 64px
 
-$control-element-height: 38px;
-$element-height: 60px;
-$header-height: $element-height;
-$footer-height: 40px;
+// Element heights
+$control-element-height: 2.375rem;  // 38px
+$element-height: 3.75rem;           // 60px
+$header-height: 4.375rem;           // 70px
+$footer-height: 2.5rem;             // 40px
 
-$border-radius-small: 8px;
-$border-radius-medium: 10px;
-$border-radius-large: 12px;
+// ===========================================
+// 3. Border Radius
+// ===========================================
+$border-radius-sm: 0.25rem;    // 4px
+$border-radius: 0.5rem;        // 8px
+$border-radius-md: 0.75rem;    // 12px
+$border-radius-lg: 1rem;       // 16px
+$border-radius-xl: 1.5rem;     // 24px
+$border-radius-pill: 50rem;    // For pill-shaped elements
+$border-radius-circle: 50%;    // For circular elements
+
+// ===========================================
+// 4. Basic Colors (for minimal styling)
+// ===========================================
+$body-color: #222;
+$body-bg: #fff;
+
+// ===========================================
+// 5. Colors
+// ===========================================
+// Primary colors
+$primary-50: #f0f9ff;
+$primary-100: #e0f2fe;
+$primary-200: #bae6fd;
+$primary-300: #7dd3fc;
+$primary-400: #38bdf8;
+$primary-500: #0ea5e9;
+$primary-600: #0284c7;
+$primary-700: #0369a1;
+$primary-800: #075985;
+$primary-900: #0c4a6e;
+
+// Secondary colors
+$secondary-50: #f5f3ff;
+$secondary-100: #ede9fe;
+$secondary-200: #ddd6fe;
+$secondary-300: #c4b5fd;
+$secondary-400: #a78bfa;
+$secondary-500: #8b5cf6;
+$secondary-600: #7c3aed;
+$secondary-700: #6d28d9;
+$secondary-800: #5b21b6;
+$secondary-900: #4c1d95;
+
+// Neutral colors
+$white: #ffffff;
+$gray-50: #f8fafc;
+$gray-100: #f1f5f9;
+$gray-200: #e2e8f0;
+$gray-300: #cbd5e1;
+$gray-400: #94a3b8;
+$gray-500: #64748b;
+$gray-600: #475569;
+$gray-700: #334155;
+$gray-800: #1e293b;
+$gray-900: #0f172a;
+$black: #000000;
+
+// Text colors
+$text-muted: $gray-600;
+
+// Semantic colors
+$success-50: #f0fdf4;
+$success-100: #dcfce7;
+$success-500: #22c55e;
+$success-700: #15803d;
+
+$warning-50: #fffbeb;
+$warning-100: #fef3c7;
+$warning-500: #f59e0b;
+$warning-700: #b45309;
+
+$danger-50: #fef2f2;
+$danger-100: #fee2e2;
+$danger-500: #ef4444;
+$danger-700: #b91c1c;
+
+$info-50: #ecfdf5;
+$info-100: #d1fae5;
+$info-500: #10b981;
+$info-700: #047857;
+
+// Theme colors (aliases)
+$primary: $primary-600;
+$secondary: $secondary-600;
+$success: $success-500;
+$warning: $warning-500;
+$danger: $danger-500;
+$info: $info-500;
+
+// ===========================================
+// 5. Typography
+// ===========================================
+// Font families
+$font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+$font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+$font-family-serif: Georgia, 'Times New Roman', Times, serif;
+
+// Font sizes
+$text-xs: 0.75rem;     // 12px
+$text-sm: 0.875rem;    // 14px
+$text-base: 1rem;      // 16px
+$text-lg: 1.125rem;    // 18px
+$text-xl: 1.25rem;     // 20px
+$text-2xl: 1.5rem;     // 24px
+$text-3xl: 1.875rem;   // 30px
+$text-4xl: 2.25rem;    // 36px
+$text-5xl: 3rem;       // 48px
+$text-6xl: 3.75rem;    // 60px
+
+// Line heights
+$leading-none: 1;
+$leading-tight: 1.25;
+$leading-snug: 1.375;
+$leading-normal: 1.5;
+$leading-relaxed: 1.625;
+$leading-loose: 2;
+
+// Font weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+$font-weight-black: 900;
+
+// ===========================================
+// 6. Shadows
+// ===========================================
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+$shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+$shadow-outline: 0 0 0 3px rgba(66, 153, 225, 0.5);
+$shadow-none: none;
+
+// ===========================================
+// 7. Breakpoints
+// ===========================================
+$breakpoint-xs: 0;
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// ===========================================
+// 8. Z-index
+// ===========================================
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+$z-index-toast: 1080;
+
+// ===========================================
+// 9. Transitions & Animations
+// ===========================================
+$transition-base: all 0.2s ease-in-out;
+$transition-fade: opacity 0.15s linear;
+$transition-collapse: height 0.35s ease;
+$transition-transform: transform 0.2s ease-in-out;
+
+// Animation durations
+$animation-duration-fast: 0.15s;
+$animation-duration-normal: 0.3s;
+$animation-duration-slow: 0.5s;
+
+// ===========================================
+// 10. Theme Variables
+// ===========================================
+// Layout
+$body-bg: $white;
+$body-color: $gray-800;
+
+// Typography
+$font-family-base: $font-family-sans;
+$font-size-base: $text-base;
+$line-height-base: $leading-normal;
+$font-weight-base: $font-weight-normal;
+
+// Links
+$link-color: $primary-600;
+$link-hover-color: darken($link-color, 15%);
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+// Borders
+$border-color: $gray-200;
+$border-width: 1px;
+$border-radius: $border-radius;
+
+// Box shadow
+$box-shadow: $shadow;
+$box-shadow-sm: $shadow-sm;
+$box-shadow-lg: $shadow-lg;
+
+// Components
+$component-active-color: $white;
+$component-active-bg: $primary;
+
+// Forms
+$input-bg: $white;
+$input-color: $gray-800;
+$input-border-color: $gray-300;
+$input-focus-border-color: $primary-400;
+$input-focus-box-shadow: 0 0 0 3px rgba($primary-100, 0.5);
+
+// Buttons
+$btn-padding-y: 0.5rem;
+$btn-padding-x: 1rem;
+$btn-font-weight: $font-weight-medium;
+$btn-border-radius: $border-radius;
+$btn-transition: $transition-base;
+
+// Cards
+$card-spacer-y: 1.5rem;
+$card-spacer-x: 1.5rem;
+$card-border-width: 1px;
+$card-border-radius: $border-radius;
+$card-box-shadow: $shadow-sm;
+$card-bg: $white;
+$card-border-color: $gray-200;
+
+// Alerts
+$alert-padding-y: 1rem;
+$alert-padding-x: 1.25rem;
+$alert-border-radius: $border-radius;
+$alert-link-font-weight: $font-weight-bold;
+$alert-border-width: 1px;
+
+// Tooltips
+$tooltip-bg: $gray-900;
+$tooltip-color: $white;
+$tooltip-padding-y: 0.5rem;
+$tooltip-padding-x: 0.75rem;
+$tooltip-border-radius: $border-radius-sm;
+$tooltip-font-size: $text-sm;
+
+// Modals
+$modal-content-border-color: $gray-200;
+$modal-content-border-width: 0;
+$modal-content-border-radius: $border-radius-lg;
+$modal-content-box-shadow: $shadow-xl;
+$modal-backdrop-bg: $black;
+$modal-backdrop-opacity: 0.5;
+
+// Dropdowns
+$dropdown-min-width: 10rem;
+$dropdown-padding-y: 0.5rem;
+$dropdown-spacer: 0.5rem;
+$dropdown-bg: $white;
+$dropdown-border-color: $gray-200;
+$dropdown-border-radius: $border-radius;
+$dropdown-box-shadow: $shadow-lg;
+$dropdown-link-color: $gray-800;
+$dropdown-link-hover-color: $gray-900;
+$dropdown-link-hover-bg: $gray-100;
+$dropdown-link-active-color: $component-active-color;
+$dropdown-link-active-bg: $component-active-bg;
+$dropdown-item-padding-y: 0.5rem;
+$dropdown-item-padding-x: 1rem;
+
+// Navs
+$nav-link-padding-y: 0.5rem;
+$nav-link-padding-x: 1rem;
+$nav-link-disabled-color: $gray-400;
+$nav-tabs-border-color: $gray-200;
+$nav-tabs-link-active-color: $primary;
+$nav-tabs-link-active-border-color: $gray-200 $gray-200 $white;
+
+// Tables
+$table-cell-padding-y: 1rem;
+$table-cell-padding-x: 1rem;
+$table-cell-padding-y-sm: 0.5rem;
+$table-cell-padding-x-sm: 0.5rem;
+$table-cell-vertical-align: top;
+$table-color: $body-color;
+$table-bg: transparent;
+$table-border-width: 1px;
+$table-border-color: $gray-200;
+$table-striped-bg: $gray-50;
+$table-hover-bg: $gray-50;
+$table-active-bg: $gray-100;
+$table-hover-color: $table-color;
+$table-striped-order: odd;
+$table-caption-color: $text-muted;
+$table-bg-scale: -80%;
+
+// Pagination
+$pagination-padding-y: 0.5rem;
+$pagination-padding-x: 0.75rem;
+$pagination-padding-y-sm: 0.25rem;
+$pagination-padding-x-sm: 0.5rem;
+$pagination-padding-y-lg: 0.75rem;
+$pagination-padding-x-lg: 1.5rem;
+$pagination-color: $gray-700;
+$pagination-bg: $white;
+$pagination-border-width: 1px;
+$pagination-border-color: $gray-300;
+$pagination-hover-color: $primary-700;
+$pagination-hover-bg: $gray-100;
+$pagination-hover-border-color: $gray-300;
+$pagination-active-color: $white;
+$pagination-active-bg: $primary;
+$pagination-active-border-color: $primary;
+$pagination-disabled-color: $gray-400;
+$pagination-disabled-bg: $white;
+$pagination-disabled-border-color: $gray-300;
+
+// Badges
+$badge-font-size: 0.75em;
+$badge-font-weight: $font-weight-semibold;
+$badge-padding-y: 0.35em;
+$badge-padding-x: 0.65em;
+$badge-border-radius: 0.25rem;
+$badge-pill-padding-x: 0.6em;
+
+// Toasts
+$toast-max-width: 350px;
+$toast-padding-x: 0.75rem;
+$toast-padding-y: 0.5rem;
+$toast-font-size: 0.875rem;
+$toast-background-color: $white;
+$toast-border-width: 1px;
+$toast-border-color: rgba(0, 0, 0, 0.1);
+$toast-border-radius: $border-radius;
+$toast-box-shadow: $shadow-lg;
+$toast-spacing: $spacing-md;
+
+// Progress bars
+$progress-height: 1rem;
+$progress-font-size: 0.75rem;
+$progress-bg: $gray-200;
+$progress-border-radius: $border-radius-pill;
+$progress-box-shadow: $shadow-inner;
+$progress-bar-color: $white;
+$progress-bar-bg: $primary;
+$progress-bar-animation-timing: 1s linear infinite;
+
+// List group
+$list-group-bg: $white;
+$list-group-border-color: $gray-200;
+$list-group-border-width: 1px;
+$list-group-border-radius: $border-radius;
+$list-group-item-padding-y: 0.75rem;
+$list-group-item-padding-x: 1.25rem;
+$list-group-hover-bg: $gray-50;
+$list-group-active-color: $component-active-color;
+$list-group-active-bg: $component-active-bg;
+$list-group-active-border-color: $list-group-active-bg;
+$list-group-disabled-color: $gray-400;
+$list-group-disabled-bg: $list-group-bg;
+$list-group-action-color: $gray-700;
+$list-group-action-hover-color: $list-group-action-color;
+$list-group-action-active-color: $body-color;
+$list-group-action-active-bg: $gray-100;
+
+// Close
+$close-font-size: $font-size-base * 1.5;
+$close-font-weight: $font-weight-bold;
+$close-color: $black;
+$close-text-shadow: 0 1px 0 $white;
+
+// Code
+$code-font-size: 87.5%;
+$code-color: $danger;
+$pre-color: $gray-900;
+$pre-bg: $gray-100;
+$pre-border-radius: $border-radius;
+
+// Grid breakpoints
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+) !default;
+
+// Grid containers
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px
+) !default;
+
+// Grid columns
+$grid-columns: 12 !default;
+$grid-gutter-width: 1.5rem !default;
+$grid-row-columns: 6 !default;

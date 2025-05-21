@@ -1,0 +1,249 @@
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  
+  h1 {
+    font-size: 2rem;
+    color: $primary-color;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  
+  p {
+    font-size: 1.125rem;
+    color: $text-secondary;
+  }
+}
+
+.success-message {
+  background-color: #f0fdf4;
+  color: #166534;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #16a34a;
+  display: flex;
+  align-items: center;
+  
+  &::before {
+    content: '✓';
+    margin-right: 0.75rem;
+    font-weight: bold;
+  }
+}
+
+.error-message {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #dc2626;
+  display: flex;
+  align-items: center;
+  
+  &::before {
+    content: '!';
+    margin-right: 0.75rem;
+    font-weight: bold;
+  }
+}
+
+.profile-form {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+    color: $primary-color;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid $border-color;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  
+  @include respond-to('tablet') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $text-heading;
+    font-size: 0.9375rem;
+  }
+  
+  input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    
+    &:disabled {
+      background-color: #f8fafc;
+      cursor: not-allowed;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    }
+    
+    &::placeholder {
+      color: #94a3b8;
+    }
+    
+    &.error {
+      border-color: #ef4444;
+    }
+  }
+  
+  .error-text {
+    display: block;
+    margin-top: 0.5rem;
+    color: #ef4444;
+    font-size: 0.8125rem;
+  }
+  
+  &.has-error {
+    input {
+      border-color: #ef4444;
+    }
+  }
+}
+
+.form-note {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid $border-color;
+  
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &-primary {
+      background-color: $primary-color;
+      color: white;
+      border: 2px solid $primary-color;
+      
+      &:hover {
+        background-color: darken($primary-color, 5%);
+        border-color: darken($primary-color, 5%);
+      }
+      
+      &:active {
+        transform: translateY(1px);
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+    
+    &-secondary {
+      background-color: white;
+      color: $primary-color;
+      border: 2px solid $primary-color;
+      
+      &:hover {
+        background-color: rgba($primary-color, 0.05);
+      }
+      
+      &:active {
+        transform: translateY(1px);
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@include respond-to('mobile') {
+  .profile-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .profile-header {
+    margin-bottom: 2rem;
+    
+    h1 {
+      font-size: 1.75rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+  
+  .profile-form {
+    padding: 1.5rem 1rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    
+    .btn {
+      width: 100%;
+    }
+  }
+}
