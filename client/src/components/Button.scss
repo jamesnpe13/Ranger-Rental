@@ -17,7 +17,8 @@
     flex-direction: column;
   }
 }
-.button {
+button {
+  all: unset;
   background-color: $greyed-out;
   color: $white;
   font-weight: 600;
@@ -57,9 +58,26 @@
     margin: 0;
     font-weight: 400;
     color: inherit;
+    height: auto;
 
-    & > span {
-      font-size: 0.8rem;
+    &.left {
+      display: flex;
+      justify-content: left;
     }
+    &.right {
+      display: flex;
+      justify-content: right;
+    }
+    &.center {
+      display: flex;
+      justify-content: center;
+    }
+    &.left {
+      display: flex;
+      justify-content: left;
+    }
+  }
+  & > span {
+    font-size: $fontsize-small;
   }
 }

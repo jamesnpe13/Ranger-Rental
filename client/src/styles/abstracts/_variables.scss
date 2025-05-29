@@ -1,12 +1,12 @@
 $debug-lines: false;
 $font-size-scale: 1;
-$frame__container-maxwidth: 1200px;
+$section-container-max-width: 1140px;
 
 $section-padding: 20px;
 $element-spacing: 20px;
 $component-spacing: 10px 0px;
 
-$control-element-height: 38px;
+$control-element-height: 45px;
 $element-height: 60px;
 $header-height: $element-height;
 $footer-height: 40px;
@@ -14,3 +14,10 @@ $footer-height: 40px;
 $border-radius-small: 8px;
 $border-radius-medium: 10px;
 $border-radius-large: 12px;
+
+$fontsize-xsmall: 0.8rem;
+$fontsize-small: 1rem;
+$fontsize-medium: 1.2rem;
+$fontsize-large: 1.4rem;
+$fontsize-xlarge: 1.6rem;
+$fontsize-xxlarge: 2rem;
