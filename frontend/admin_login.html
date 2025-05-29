@@ -14,14 +14,14 @@
     <main>
         <div class="login-container">
             <h2>Admin Login</h2>
-            <form id="adminLoginForm" method="POST" action="/admin/login">
+            <form id="adminLoginForm">
                 <div class="input-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required autocomplete="username">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
                 </div>
                 <div class="input-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                    <input type="password" id="password" name="password" required>
                 </div>
                 <button type="submit" class="btn">Login</button>
             </form>
@@ -31,34 +31,6 @@
     <footer>
         <p>&copy; 2025 Ranger Rental</p>
     </footer>
-    <script>
-        // Clear any remaining session data when the login page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if we're coming from a logout
-            const urlParams = new URLSearchParams(window.location.search);
-            const fromLogout = urlParams.get('from_logout') === '1';
-            
-            if (fromLogout) {
-                console.log('Coming from logout - clearing local storage and session storage');
-                
-                // Clear all storage
-                localStorage.clear();
-                sessionStorage.clear();
-                
-                // Clear all cookies
-                document.cookie.split(';').forEach(cookie => {
-                    const [name] = cookie.trim().split('=');
-                    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-                    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/admin;`;
-                });
-                
-                // Force a reload to ensure clean state
-                if (!window.location.search.includes('cleared=1')) {
-                    window.location.search = '?from_logout=1&cleared=1';
-                }
-            }
-        });
-    </script>
     <script src="admin_login.js"></script>
 </body>
 </html>

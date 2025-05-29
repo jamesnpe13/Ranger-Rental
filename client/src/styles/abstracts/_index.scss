@@ -1,6 +1,5 @@
 // index of all abstract partials for forwarding
-@forward './variables';
 @forward './colors';
 @forward './media-queries';
 @forward './mixins';
-@forward './base';
+@forward './variables';

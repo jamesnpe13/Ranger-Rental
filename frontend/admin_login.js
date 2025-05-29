@@ -3,44 +3,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorMessage = document.getElementById('errorMessage');
 
     if (adminLoginForm) {
-        adminLoginForm.addEventListener('submit', async function(event) {
+        adminLoginForm.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
             errorMessage.textContent = ''; // Clear any previous error messages
 
-            const formData = new FormData(adminLoginForm);
-            const email = formData.get('email');
-            const password = formData.get('password');
+            const username = event.target.username.value;
+            const password = event.target.password.value;
 
-            console.log('Admin Login Attempt:', { email });
+            console.log('Admin Login Attempt:', { username, password });
 
-            // Basic client-side validation
-            if (!email || !password) {
-                errorMessage.textContent = 'Email and password are required.';
+            // Basic client-side validation (can be expanded)
+            if (!username || !password) {
+                errorMessage.textContent = 'Username and password are required.';
                 return;
             }
 
-            try {
-                const response = await fetch('/admin/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({ email, password }).toString(),
-                    redirect: 'manual', // Handle redirects manually
-                    credentials: 'same-origin'  // Important for session cookies
-                });
-
-                if (response.ok || response.redirected) {
-                    // If we got redirected, it means login was successful
-                    window.location.href = response.url || '/admin/dashboard';
+            // Send credentials to the backend for verification
+            fetch('http://127.0.0.1:5001/api/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Admin login successful") {
+                    // Store user info if needed, e.g., in localStorage
+                    // localStorage.setItem('adminUser', JSON.stringify({ username: data.username, role: data.role }));
+                    window.location.href = 'admin_panel.html'; // Redirect to admin panel
                 } else {
-                    const data = await response.json().catch(() => ({}));
-                    throw new Error(data.error || `Login failed (${response.status}). Please try again.`);
+                    errorMessage.textContent = data.message || 'Login failed. Please try again.';
                 }
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Admin Login Error:', error);
-                errorMessage.textContent = error.message || 'An error occurred during login. Please try again.';
-            }
+                errorMessage.textContent = 'An error occurred during login. Please try again.';
+            });
         });
     }
 });
