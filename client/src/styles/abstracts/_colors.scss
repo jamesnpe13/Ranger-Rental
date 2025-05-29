@@ -1,20 +1,27 @@
 @use "sass:color";
+@use './variables' as *;
 
-$primary: #222222;
-$secondary: #4387e0;
+// This file is now deprecated - all colors have been moved to _variables.scss
+// This file is kept for backward compatibility
+
+// Use the primary color from variables if available, otherwise fallback
+$primary: $primary !default;
+$secondary: $secondary !default;
 $tertiary: orange;
 
-$destructive: #e45353;
-$greyed-out: #c0c0c0;
-$success: #2fd44b;
-$neutral: #4387e0;
-$warning: #efaa6e;
+// Semantic colors - use the ones from _variables.scss instead
+$destructive: $danger !default;
+$greyed-out: $gray-400 !default;
+$success: $success !default;
+$neutral: $gray-500 !default;
+$warning: $warning !default;
 
-$black: #222222;
-$white: #f9f9f9;
-$grey20: color.mix($white, $black, 20%);
-$grey40: color.mix($white, $black, 40%);
-$grey60: color.mix($white, $black, 60%);
-$grey80: color.mix($white, $black, 80%);
+// Grayscale - use $gray-* from _variables.scss instead
+$black: $black !default;
+$white: $white !default;
+$grey20: $gray-200 !default;
+$grey40: $gray-400 !default;
+$grey60: $gray-600 !default;
+$grey80: $gray-800 !default;
 
 $highlight-secondary: color.mix($white, $secondary, 60%);
