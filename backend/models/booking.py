@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
-from models import db
-from sqlalchemy import and_, or_
+from sqlalchemy import or_, and_
+from . import db
 
 class Booking(db.Model):
+    """Booking model for vehicle reservations."""
     __tablename__ = 'bookings'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -11,43 +12,47 @@ class Booking(db.Model):
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
-    payment_intent_id = db.Column(db.String(100), unique=True, nullable=True)
     status = db.Column(db.String(20), default='pending')  # 'pending', 'confirmed', 'cancelled', 'completed'
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     # Relationships
-    vehicle = db.relationship('Vehicle', backref='bookings')
-    user = db.relationship('User', backref='bookings')
+    vehicle = db.relationship('Vehicle', backref=db.backref('bookings', lazy=True))
+    payments = db.relationship('Payment', backref='booking', lazy=True)
     
-    def to_dict(self, include_vehicle=False, include_user=False):
-        """Convert booking to dictionary with optional related objects"""
-        result = {
+    def to_dict(self):
+        """Convert booking to dictionary."""
+        return {
             'id': self.id,
             'vehicle_id': self.vehicle_id,
             'user_id': self.user_id,
-            'start_date': self.start_date.isoformat() if self.start_date else None,
-            'end_date': self.end_date.isoformat() if self.end_date else None,
-            'total_price': float(self.total_price) if self.total_price else None,
-            'payment_intent_id': self.payment_intent_id,
+            'start_date': self.start_date.isoformat(),
+            'end_date': self.end_date.isoformat(),
+            'total_price': float(self.total_price),
             'status': self.status,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
-            'duration_days': (self.end_date - self.start_date).days if self.end_date and self.start_date else 0
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+            'duration_days': (self.end_date - self.start_date).days
         }
         
-        if include_vehicle and self.vehicle:
-            result['vehicle'] = self.vehicle.to_dict()
-            
-        if include_user and self.user:
-            result['user'] = {
-                'id': self.user.id,
-                'email': self.user.email,
-                'first_name': self.user.first_name,
-                'last_name': self.user.last_name
-            }
-            
-        return result
+    def is_available(self):
+        """Check if the booking dates are available."""
+        from datetime import datetime
+        now = datetime.utcnow()
+        return self.start_date > now and self.status in ['pending', 'confirmed']
+    
+    def cancel(self):
+        """Cancel the booking."""
+        self.status = 'cancelled'
+        self.updated_at = datetime.utcnow()
+        
+    def complete(self):
+        """Mark the booking as completed."""
+        self.status = 'completed'
+        self.updated_at = datetime.utcnow()
+        
+    def __repr__(self):
+        return f'<Booking {self.id} - {self.start_date} to {self.end_date}>'
     
     @classmethod
     def is_vehicle_available(cls, vehicle_id, start_date, end_date):

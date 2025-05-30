@@ -1,167 +1,235 @@
-"""
-Booking-related API endpoints.
-"""
-from datetime import datetime
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from ..core import db
-from ..models import Booking, Vehicle, User
-from ..schemas import BookingSchema
-from ..services import BookingService
-from ..utils import admin_required, validate_dates, calculate_total_price
+from models import db
+from models.booking import Booking
+from models.vehicle import Vehicle
+from models.user import User
+from datetime import datetime
+from sqlalchemy import or_, and_
 
-# Create blueprint
-bookings_bp = Blueprint('bookings', __name__)
-booking_schema = BookingSchema()
+bp = Blueprint('bookings', __name__, url_prefix='/bookings')
 
-@bookings_bp.route('', methods=['GET'])
-@jwt_required()
-def get_user_bookings():
-    """Get all bookings for the current user."""
-    user_id = get_jwt_identity()
-    bookings = Booking.query.filter_by(user_id=user_id).all()
-    return jsonify([{
-        'id': b.id,
-        'vehicle_id': b.vehicle_id,
-        'start_date': b.start_date.isoformat(),
-        'end_date': b.end_date.isoformat(),
-        'total_price': float(b.total_price) if b.total_price else None,
-        'status': b.status,
-        'created_at': b.created_at.isoformat(),
-        'vehicle': {
-            'make': b.vehicle.make,
-            'model': b.vehicle.model,
-            'image_url': b.vehicle.image_urls[0] if b.vehicle.image_urls else None
-        } if b.vehicle else None
-    } for b in bookings])
+def validate_booking_dates(start_date, end_date):
+    """Validate booking dates."""
+    try:
+        start = datetime.fromisoformat(start_date) if isinstance(start_date, str) else start_date
+        end = datetime.fromisoformat(end_date) if isinstance(end_date, str) else end_date
+        
+        if start >= end:
+            return False, "End date must be after start date"
+            
+        if start < datetime.utcnow():
+            return False, "Start date cannot be in the past"
+            
+        return True, (start, end)
+    except (ValueError, TypeError) as e:
+        return False, f"Invalid date format: {str(e)}. Use ISO format (e.g., 2025-06-01T10:00:00)"
 
-@bookings_bp.route('/<int:booking_id>', methods=['GET'])
-@jwt_required()
-def get_booking(booking_id):
-    """Get details of a specific booking."""
-    user_id = get_jwt_identity()
-    booking = Booking.query.get_or_404(booking_id)
-    
-    # Check permissions
-    user = User.query.get(user_id)
-    if not user.is_admin and booking.user_id != user_id:
-        return jsonify({"error": "Not authorized to view this booking"}), 403
-    
-    return jsonify(booking.to_dict(include_vehicle=True, include_user=user.is_admin))
-
-@bookings_bp.route('', methods=['POST'])
+@bp.route('', methods=['POST'])
 @jwt_required()
 def create_booking():
     """Create a new booking."""
-    user_id = get_jwt_identity()
+    current_user_id = get_jwt_identity()
     data = request.get_json()
     
     # Validate required fields
     required_fields = ['vehicle_id', 'start_date', 'end_date']
-    if not all(field in data for field in required_fields):
-        return jsonify({"error": "Missing required fields"}), 400
+    for field in required_fields:
+        if field not in data:
+            return jsonify({
+                'success': False,
+                'error': f'Missing required field: {field}'
+            }), 400
     
     # Validate dates
-    is_valid, result = validate_dates(data['start_date'], data['end_date'])
+    is_valid, date_result = validate_booking_dates(data['start_date'], data['end_date'])
     if not is_valid:
-        return jsonify(result), 400
+        return jsonify({
+            'success': False,
+            'error': date_result  # Contains the error message
+        }), 400
     
-    # Check if vehicle exists and is available
+    start_date, end_date = date_result
+    
+    # Check if vehicle exists
     vehicle = Vehicle.query.get(data['vehicle_id'])
     if not vehicle:
-        return jsonify({"error": "Vehicle not found"}), 404
+        return jsonify({
+            'success': False,
+            'error': 'Vehicle not found'
+        }), 404
     
+    # Check if vehicle is available
     if not vehicle.is_available:
-        return jsonify({"error": "Vehicle is not available for booking"}), 400
+        return jsonify({
+            'success': False,
+            'error': 'Vehicle is not available for booking'
+        }), 400
     
-    # Check if vehicle is available for the selected dates
-    if not vehicle.check_availability(result['start_date'], result['end_date']):
-        return jsonify({"error": "Vehicle is not available for the selected dates"}), 400
+    # Check for booking conflicts
+    if not Booking.is_vehicle_available(vehicle.id, start_date, end_date):
+        return jsonify({
+            'success': False,
+            'error': 'Vehicle is already booked for the selected dates'
+        }), 400
+    
+    # Calculate total price
+    days = (end_date - start_date).days
+    total_price = days * vehicle.price_per_day
     
     try:
-        # Calculate total price
-        days = (result['end_date'] - result['start_date']).days + 1
-        total_price = vehicle.price_per_day * days
-        
         # Create booking
         booking = Booking(
             vehicle_id=vehicle.id,
-            user_id=user_id,
-            start_date=result['start_date'],
-            end_date=result['end_date'],
+            user_id=current_user_id,
+            start_date=start_date,
+            end_date=end_date,
             total_price=total_price,
-            status='confirmed'
+            status='confirmed'  # Could be 'pending' if payment is required first
         )
         
         db.session.add(booking)
         db.session.commit()
         
         return jsonify({
+            'success': True,
             'message': 'Booking created successfully',
-            'booking': booking.to_dict(include_vehicle=True)
+            'booking': booking.to_dict()
         }), 201
         
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
-@bookings_bp.route('/<int:booking_id>', methods=['PUT'])
+@bp.route('', methods=['GET'])
 @jwt_required()
-def update_booking(booking_id):
-    """Update a booking (only status updates are allowed)."""
-    user_id = get_jwt_identity()
+def get_user_bookings():
+    """Get all bookings for the current user."""
+    current_user_id = get_jwt_identity()
+    bookings = Booking.query.filter_by(user_id=current_user_id).all()
+    
+    return jsonify({
+        'success': True,
+        'bookings': [booking.to_dict() for booking in bookings]
+    }), 200
+
+@bp.route('/<int:booking_id>', methods=['GET'])
+@jwt_required()
+def get_booking(booking_id):
+    """Get a specific booking by ID."""
+    current_user_id = get_jwt_identity()
     booking = Booking.query.get_or_404(booking_id)
     
-    # Check permissions
-    user = User.query.get(user_id)
-    if not user.is_admin and booking.user_id != user_id:
-        return jsonify({"error": "Not authorized to update this booking"}), 403
+    # Check if the current user is the owner of the booking or an admin
+    if booking.user_id != current_user_id and not User.query.get(current_user_id).is_admin:
+        return jsonify({
+            'success': False,
+            'error': 'Unauthorized access to this booking'
+        }), 403
+    
+    return jsonify({
+        'success': True,
+        'booking': booking.to_dict()
+    }), 200
+
+@bp.route('/<int:booking_id>', methods=['PUT'])
+@jwt_required()
+def update_booking(booking_id):
+    """Update a booking (cancel or change dates)."""
+    current_user_id = get_jwt_identity()
+    booking = Booking.query.get_or_404(booking_id)
+    
+    # Check if the current user is the owner of the booking
+    if booking.user_id != current_user_id and not User.query.get(current_user_id).is_admin:
+        return jsonify({
+            'success': False,
+            'error': 'Unauthorized to update this booking'
+        }), 403
     
     data = request.get_json()
     
-    # Only allow status updates for non-admins
-    if 'status' in data and not user.is_admin:
-        return jsonify({"error": "Only admins can update booking status"}), 403
-    
-    # Update status if provided
-    if 'status' in data:
+    # Only allow updating status and dates
+    if 'status' in data and data['status'] in ['cancelled']:
+        if booking.status == 'cancelled':
+            return jsonify({
+                'success': False,
+                'error': 'Booking is already cancelled'
+            }), 400
+            
         booking.status = data['status']
+        booking.updated_at = datetime.utcnow()
+        
+    # Handle date changes
+    if 'start_date' in data or 'end_date' in data:
+        start_date = data.get('start_date', booking.start_date.isoformat())
+        end_date = data.get('end_date', booking.end_date.isoformat())
+        
+        is_valid, date_result = validate_booking_dates(start_date, end_date)
+        if not is_valid:
+            return jsonify({
+                'success': False,
+                'error': date_result
+            }), 400
+            
+        start_date, end_date = date_result
+        
+        # Check if the new dates are available
+        if not Booking.is_vehicle_available(booking.vehicle_id, start_date, end_date, exclude_booking_id=booking.id):
+            return jsonify({
+                'success': False,
+                'error': 'Vehicle is not available for the selected dates'
+            }), 400
+            
+        # Update dates and recalculate price
+        booking.start_date = start_date
+        booking.end_date = end_date
+        days = (end_date - start_date).days
+        booking.total_price = days * booking.vehicle.price_per_day
     
     try:
         db.session.commit()
         return jsonify({
+            'success': True,
             'message': 'Booking updated successfully',
-            'booking': booking.to_dict(include_vehicle=True)
-        })
+            'booking': booking.to_dict()
+        }), 200
+        
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
-@bookings_bp.route('/<int:booking_id>', methods=['DELETE'])
+@bp.route('/<int:booking_id>', methods=['DELETE'])
 @jwt_required()
-def cancel_booking(booking_id):
-    """Cancel a booking."""
-    user_id = get_jwt_identity()
+def delete_booking(booking_id):
+    """Delete a booking (admin only)."""
+    current_user = User.query.get(get_jwt_identity())
+    
+    if not current_user.is_admin:
+        return jsonify({
+            'success': False,
+            'error': 'Admin access required'
+        }), 403
+    
     booking = Booking.query.get_or_404(booking_id)
     
-    # Check permissions
-    user = User.query.get(user_id)
-    if not user.is_admin and booking.user_id != user_id:
-        return jsonify({"error": "Not authorized to cancel this booking"}), 403
-    
-    # Only allow cancelling pending or confirmed bookings
-    if booking.status not in ['pending', 'confirmed']:
-        return jsonify({"error": f"Cannot cancel a {booking.status} booking"}), 400
-    
     try:
-        # Update status to cancelled
-        booking.status = 'cancelled'
+        db.session.delete(booking)
         db.session.commit()
         
         return jsonify({
-            'message': 'Booking cancelled successfully',
-            'booking_id': booking_id
-        })
+            'success': True,
+            'message': 'Booking deleted successfully'
+        }), 200
+        
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
