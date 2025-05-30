@@ -11,7 +11,10 @@
   }
 }
 
-.input-field {
+.input-field,
+input[type="text"],
+input[type="password"],
+input[type="email"] {
   font-size: $fontsize-small;
   height: $control-element-height;
   width: 100%;
@@ -24,7 +27,7 @@
   background-color: white;
 
   &:focus {
-    box-sizing: unset;
+    box-sizing: border-box;
     border: 2px solid $secondary;
     outline: 4px solid $highlight-secondary;
   }

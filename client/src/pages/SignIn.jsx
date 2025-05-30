@@ -14,11 +14,16 @@ export default function SignIn() {
           </div>
           <h2>Customer Sign In</h2>
           <form className="form">
-            <InputField type="text" placeholder="Email" />
+            <input type="email" placeholder="Email" />
+            <input type="password" placeholder="Password" />
+            <button className="primary" type="submit">
+              Sign in
+            </button>
+            {/* <InputField type="text" placeholder="Email" />
             <InputField type="password" placeholder="Password" />
             <Button type="primary" buttonType="submit">
               Sign In
-            </Button>
+            </Button> */}
           </form>
           <div className="extra-buttons">
             <Button type="text left">Forgot password</Button>
