@@ -770,303 +770,414 @@ def bookings():
     pagination = query.order_by(Booking.created_at.desc()).paginate(
         page=page, per_page=per_page, error_out=False)
     
-    return render_template('admin/bookings.html', 
-                         bookings=pagination.items,
-                         pagination=pagination,
-                         search=request.args.get('search', ''))
-
-# API: List all vehicles
 @bp.route('/api/vehicles', methods=['GET'])
 @login_required
 @admin_required
 def api_list_vehicles():
+    """
+    Enhanced API endpoint to list vehicles with:
+    - Advanced search across multiple fields
+    - Multiple filter options
+    - Sorting
+    - Pagination
+    """
     try:
-        # Get query parameters
+        # Pagination
         page = request.args.get('page', 1, type=int)
-        per_page = request.args.get('per_page', 10, type=int)
-        search = request.args.get('search', '')
+        per_page = min(request.args.get('per_page', 10, type=int), 100)  # Max 100 items per page
         
-        # Build query
+        # Initialize query
         query = Vehicle.query
         
         # Apply search filter
+        search = request.args.get('search', '').strip()
         if search:
-            search = f'%{search}%'
+            search = f"%{search}%"
             query = query.filter(
                 or_(
                     Vehicle.make.ilike(search),
                     Vehicle.model.ilike(search),
-                    Vehicle.license_plate.ilike(search)
+                    Vehicle.registration_number.ilike(search),
+                    Vehicle.vehicle_type.ilike(search),
+                    Vehicle.description.ilike(search)
                 )
             )
         
-        # Execute query with pagination
-        pagination = query.order_by(Vehicle.created_at.desc()).paginate(
-            page=page, per_page=per_page, error_out=False)
+        # Apply filters
+        if 'status' in request.args:
+            status = request.args.get('status')
+            if status == 'available':
+                query = query.filter(Vehicle.is_available == True)
+            elif status == 'unavailable':
+                query = query.filter(Vehicle.is_available == False)
         
-        # Format response
-        vehicles = []
-        for vehicle in pagination.items:
-            vehicles.append({
-                'id': vehicle.id,
-                'make': vehicle.make,
-                'model': vehicle.model,
-                'year': vehicle.year,
-                'type': vehicle.vehicle_type,
-                'price_per_day': float(vehicle.price_per_day) if vehicle.price_per_day else None,
-                'location': vehicle.location,
-                'license_plate': vehicle.license_plate,
-                'description': vehicle.description,
-                'image_url': vehicle.image_url,
-                'is_available': vehicle.is_available,
-                'created_at': vehicle.created_at.isoformat(),
-                'updated_at': vehicle.updated_at.isoformat() if vehicle.updated_at else None
-            })
+        if 'make' in request.args:
+            query = query.filter(Vehicle.make.ilike(f"%{request.args.get('make')}%"))
             
+        if 'vehicle_type' in request.args:
+            query = query.filter(Vehicle.vehicle_type.ilike(f"%{request.args.get('vehicle_type')}%"))
+            
+        if 'min_price' in request.args:
+            query = query.filter(Vehicle.price_per_day >= float(request.args.get('min_price')))
+            
+        if 'max_price' in request.args:
+            query = query.filter(Vehicle.price_per_day <= float(request.args.get('max_price')))
+        
+        # Apply sorting
+        sort_by = request.args.get('sort_by', 'created_at')
+        sort_order = request.args.get('sort_order', 'desc')
+        
+        if hasattr(Vehicle, sort_by):
+            sort_field = getattr(Vehicle, sort_by)
+            if sort_order.lower() == 'asc':
+                query = query.order_by(sort_field.asc())
+            else:
+                query = query.order_by(sort_field.desc())
+        
+        # Apply pagination
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+        
+        # Get distinct values for filters
+        makes = [m[0] for m in db.session.query(Vehicle.make).distinct().all() if m[0]]
+        types = [t[0] for t in db.session.query(Vehicle.vehicle_type).distinct().all() if t[0]]
+        
+        # Prepare response
+        vehicles = [{
+            'id': v.id,
+            'make': v.make,
+            'model': v.model,
+            'year': v.year,
+            'vehicle_type': v.vehicle_type,
+            'registration_number': v.registration_number,
+            'price_per_day': float(v.price_per_day) if v.price_per_day else None,
+            'is_available': v.is_available,
+            'mileage': v.mileage,
+            'seats': v.seats,
+            'doors': v.doors,
+            'transmission': v.transmission,
+            'fuel_type': v.fuel_type,
+            'created_at': v.created_at.isoformat() if v.created_at else None,
+            'updated_at': v.updated_at.isoformat() if v.updated_at else None
+        } for v in pagination.items]
+        
         return jsonify({
             'success': True,
-            'vehicles': vehicles,
-            'total': pagination.total,
-            'pages': pagination.pages,
-            'current_page': page
+            'data': {
+                'vehicles': vehicles,
+                'filters': {
+                    'makes': sorted(makes),
+                    'types': sorted(types),
+                    'min_price': db.session.query(db.func.min(Vehicle.price_per_day)).scalar() or 0,
+                    'max_price': db.session.query(db.func.max(Vehicle.price_per_day)).scalar() or 1000
+                }
+            },
+            'pagination': {
+                'total': pagination.total,
+                'pages': pagination.pages,
+                'current_page': page,
+                'per_page': per_page,
+                'has_next': pagination.has_next,
+                'has_prev': pagination.has_prev
+            }
         })
+        
     except Exception as e:
-        current_app.logger.error(f'Error fetching vehicles: {str(e)}')
-        return jsonify({'success': False, 'error': 'Failed to fetch vehicles'}), 500
+        current_app.logger.error(f"Error fetching vehicles: {str(e)}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'message': f'Failed to fetch vehicles: {str(e)}'
+        }), 500
 
-# API: Save or update vehicle (handles both form and JSON API)
-@bp.route('/vehicles/save', methods=['POST'])
-@bp.route('/vehicles/save/<int:vehicle_id>', methods=['POST'])
+# API: Save or update vehicle with enhanced validation and error handling
 @bp.route('/api/vehicles', methods=['POST'])
+@bp.route('/api/vehicles/<int:vehicle_id>', methods=['PUT'])
 @login_required
 @admin_required
 def api_save_vehicle(vehicle_id=None):
+    """
+    Handle vehicle creation and updates with:
+    - Comprehensive validation
+    - Better error messages
+    - Image handling
+    - Audit logging
+    """
     try:
-        # Check if this is a JSON API request or form submission
-        is_json = request.is_json or request.content_type == 'application/json'
-        
-        if is_json:
+        # Check if request is JSON or form data
+        if request.is_json:
             data = request.get_json()
-            
-            # Validate required fields for JSON API
-            required_fields = ['make', 'model', 'year', 'type', 'price_per_day', 'owner_id']
-            if not all(field in data for field in required_fields):
-                return jsonify({
-                    'success': False,
-                    'error': 'Missing required fields. Required: make, model, year, type, price_per_day, owner_id'
-                }), 400
-                
-            # Check if owner exists
-            owner = User.query.get(data['owner_id'])
-            if not owner:
-                return jsonify({
-                    'success': False,
-                    'error': 'Owner not found'
-                }), 404
-                
-            if 'id' in data or vehicle_id:  # Update existing vehicle
-                vehicle_id = vehicle_id or data.get('id')
-                vehicle = Vehicle.query.get_or_404(vehicle_id)
-                vehicle.make = data['make']
-                vehicle.model = data['model']
-                vehicle.year = data['year']
-                vehicle.vehicle_type = data['type']
-                vehicle.price_per_day = float(data['price_per_day'])
-                vehicle.is_available = data.get('is_available', True)
-                vehicle.location = data.get('location', '')
-                vehicle.description = data.get('description', '')
-                vehicle.image_url = data.get('image_url', '')
-                vehicle.owner_id = data['owner_id']
-                message = 'Vehicle updated successfully'
-            else:  # Create new vehicle
-                vehicle = Vehicle(
-                    make=data['make'],
-                    model=data['model'],
-                    year=data['year'],
-                    vehicle_type=data['type'],
-                    price_per_day=float(data['price_per_day']),
-                    is_available=data.get('is_available', True),
-                    location=data.get('location', ''),
-                    description=data.get('description', ''),
-                    image_url=data.get('image_url', ''),
-                    owner_id=data['owner_id']
-                )
-                db.session.add(vehicle)
-                message = 'Vehicle created successfully'
-                
-            db.session.commit()
-            return jsonify({
-                'success': True,
-                'message': message,
-                'vehicle_id': vehicle.id
-            })
-            
-        else:  # Form submission
-            # Check if this is an update or create
-            is_update = vehicle_id is not None
-            
-            # Get form data
-            make = request.form.get('make')
-            model = request.form.get('model')
-            year = request.form.get('year')
-            vehicle_type = request.form.get('type')
-            price_per_day = request.form.get('price_per_day')
-            location = request.form.get('location')
-            license_plate = request.form.get('license_plate')
-            description = request.form.get('description')
-            is_available = request.form.get('is_available') == 'on'
-            
-            # Validate required fields
-            if not all([make, model, year, vehicle_type, price_per_day]):
-                flash('Please fill in all required fields', 'danger')
-                return redirect(url_for('admin.vehicles'))
-            
-            # Handle file upload
-            image_url = None
-            if 'image' in request.files:
-                file = request.files['image']
-                if file.filename != '':
-                    # Ensure upload folder exists
-                    os.makedirs(current_app.config['UPLOAD_FOLDER'], exist_ok=True)
-                    # Save the file to the uploads folder
-                    filename = secure_filename(file.filename)
-                    file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                    file.save(file_path)
-                    image_url = url_for('static', filename=f'uploads/{filename}')
-            
-            if is_update:
-                # Update existing vehicle
-                vehicle = Vehicle.query.get_or_404(vehicle_id)
-                vehicle.make = make
-                vehicle.model = model
-                vehicle.year = year
-                vehicle.vehicle_type = vehicle_type
-                vehicle.price_per_day = float(price_per_day)
-                vehicle.location = location
-                vehicle.license_plate = license_plate
-                vehicle.description = description
-                vehicle.is_available = is_available
-                if image_url:
-                    vehicle.image_url = image_url
-                vehicle.updated_at = datetime.utcnow()
-                db.session.commit()
-                flash('Vehicle updated successfully', 'success')
-            else:
-                # Create new vehicle
-                vehicle = Vehicle(
-                    make=make,
-                    model=model,
-                    year=year,
-                    vehicle_type=vehicle_type,
-                    price_per_day=float(price_per_day),
-                    location=location,
-                    license_plate=license_plate,
-                    description=description,
-                    image_url=image_url,
-                    is_available=is_available
-                )
-                db.session.add(vehicle)
-                db.session.commit()
-                flash('Vehicle added successfully', 'success')
-            
-            return redirect(url_for('admin.vehicles'))
-            
-    except Exception as e:
-        db.session.rollback()
-        current_app.logger.error(f'Error saving vehicle: {str(e)}')
-        if is_json:
-            return jsonify({
-                'success': False,
-                'error': 'Failed to save vehicle',
-                'details': str(e)
-            }), 500
         else:
-            flash('Failed to save vehicle. Please try again.', 'danger')
-            return redirect(url_for('admin.vehicles'))
-
-# API: Toggle vehicle status
-@bp.route('/vehicles/<int:vehicle_id>/toggle-status', methods=['POST'])
-@login_required
-@admin_required
-def toggle_vehicle_status(vehicle_id):
-    try:
-        vehicle = Vehicle.query.get_or_404(vehicle_id)
-        vehicle.is_available = not vehicle.is_available
-        vehicle.updated_at = datetime.utcnow()
-        db.session.commit()
+            data = request.form.to_dict()
+            
+        # Enhanced validation
+        validation_errors = []
         
-        status = 'available' if vehicle.is_available else 'unavailable'
-        flash(f'Vehicle marked as {status}', 'success')
-        return redirect(url_for('admin.vehicles'))
-    except Exception as e:
-        db.session.rollback()
-        current_app.logger.error(f'Error toggling vehicle status: {str(e)}')
-        flash('Failed to update vehicle status', 'danger')
-        return redirect(url_for('admin.vehicles'))
-
-# API: Delete vehicle
-@bp.route('/vehicles/<int:vehicle_id>/delete', methods=['POST'])
-@login_required
-@admin_required
-def delete_vehicle(vehicle_id):
-    try:
-        vehicle = Vehicle.query.get_or_404(vehicle_id)
+        # Required fields validation
+        required_fields = {
+            'make': 'Make is required',
+            'model': 'Model is required',
+            'year': 'Year is required',
+            'registration_number': 'Registration number is required',
+            'price_per_day': 'Price per day is required',
+            'vehicle_type': 'Vehicle type is required'
+        }
         
-        # Delete associated image if it exists
-        if vehicle.image_url:
-            try:
-                # Remove the file from the filesystem
-                image_path = os.path.join(current_app.root_path, 'static', vehicle.image_url.split('/static/')[-1])
-                if os.path.exists(image_path):
-                    os.remove(image_path)
-            except Exception as e:
-                current_app.logger.error(f'Error deleting vehicle image: {str(e)}')
+        for field, error_msg in required_fields.items():
+            if field not in data or not str(data[field]).strip():
+                validation_errors.append(error_msg)
         
-        # Delete the vehicle
-        db.session.delete(vehicle)
-        db.session.commit()
+        # Numeric validation
+        numeric_fields = {
+            'year': ('Year', 1900, datetime.now().year + 1),
+            'price_per_day': ('Price per day', 0, 10000),
+            'mileage': ('Mileage', 0, 1000000),
+            'seats': ('Seats', 1, 100),
+            'doors': ('Doors', 1, 10)
+        }
         
-        flash('Vehicle deleted successfully', 'success')
-        return redirect(url_for('admin.vehicles'))
-    except Exception as e:
-        db.session.rollback()
-        current_app.logger.error(f'Error deleting vehicle: {str(e)}')
-        flash('Failed to delete vehicle', 'danger')
-        return redirect(url_for('admin.vehicles'))
-
-# API: Delete vehicle
-@bp.route('/api/vehicles/<int:vehicle_id>', methods=['DELETE'])
-@login_required
-@admin_required
-def api_delete_vehicle(vehicle_id):
-    try:
-        vehicle = Vehicle.query.get_or_404(vehicle_id)
+        for field, (label, min_val, max_val) in numeric_fields.items():
+            if field in data and data[field]:
+                try:
+                    num_val = float(data[field])
+                    if not (min_val <= num_val <= max_val):
+                        validation_errors.append(f"{label} must be between {min_val} and {max_val}")
+                except (ValueError, TypeError):
+                    validation_errors.append(f"{label} must be a valid number")
         
-        # Check for active bookings
-        active_bookings = Booking.query.filter(
-            Booking.vehicle_id == vehicle_id,
-            Booking.status.in_(['pending', 'confirmed', 'active'])
-        ).count()
+        # Check for duplicate registration number
+        if 'registration_number' in data and data['registration_number']:
+            existing = Vehicle.query.filter(
+                Vehicle.registration_number == data['registration_number'].strip(),
+                Vehicle.id != vehicle_id if vehicle_id else True
+            ).first()
+            
+            if existing:
+                validation_errors.append('A vehicle with this registration number already exists')
         
-        if active_bookings > 0:
+        if validation_errors:
             return jsonify({
                 'success': False,
-                'error': 'Cannot delete vehicle with active bookings'
+                'message': 'Validation failed',
+                'errors': validation_errors
             }), 400
-            
-        db.session.delete(vehicle)
+        
+        # Create or update vehicle
+        if vehicle_id:
+            vehicle = Vehicle.query.get(vehicle_id)
+            if not vehicle:
+                return jsonify({
+                    'success': False,
+                    'message': 'Vehicle not found'
+                }), 404
+            action = 'updated'
+            # Log the update
+            current_app.logger.info(f"Updating vehicle {vehicle_id} by user {current_user.id}")
+        else:
+            vehicle = Vehicle()
+            action = 'created'
+            vehicle.created_by = current_user.id
+            current_app.logger.info(f"Creating new vehicle by user {current_user.id}")
+        
+        # Update vehicle attributes with type conversion and null handling
+        vehicle.make = data['make'].strip()
+        vehicle.model = data['model'].strip()
+        vehicle.year = int(data['year'])
+        vehicle.registration_number = data['registration_number'].strip()
+        vehicle.price_per_day = float(data['price_per_day'])
+        vehicle.vehicle_type = data.get('vehicle_type', '').strip()
+        
+        # Handle boolean fields
+        for bool_field in ['is_available', 'has_gps', 'has_bluetooth', 'has_air_conditioning']:
+            if bool_field in data:
+                setattr(vehicle, bool_field, str(data[bool_field]).lower() in ('true', '1', 'yes'))
+        
+        # Handle optional numeric fields
+        for num_field in ['mileage', 'seats', 'doors']:
+            if num_field in data and data[num_field]:
+                try:
+                    setattr(vehicle, num_field, int(float(data[num_field])))
+                except (ValueError, TypeError):
+                    pass  # Keep existing value if conversion fails
+        
+        # Handle other optional fields
+        for field in ['description', 'transmission', 'fuel_type', 'color']:
+            if field in data:
+                setattr(vehicle, field, data[field].strip() if data[field] else None)
+        
+        # Handle file upload
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and file.filename:
+                # Delete old image if exists
+                if vehicle.image_url and os.path.exists(vehicle.image_url.lstrip('/')):
+                    try:
+                        os.remove(vehicle.image_url.lstrip('/'))
+                    except OSError:
+                        pass
+                
+                # Save new image
+                file_ext = os.path.splitext(file.filename)[1].lower()
+                filename = f"{vehicle.registration_number}_{secrets.token_hex(8)}{file_ext}"
+                upload_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], 'vehicles')
+                os.makedirs(upload_dir, exist_ok=True)
+                filepath = os.path.join(upload_dir, filename)
+                file.save(filepath)
+                vehicle.image_url = f"/static/uploads/vehicles/{filename}"
+        
+        # Set updated timestamp and user
+        vehicle.updated_at = datetime.utcnow()
+        vehicle.updated_by = current_user.id
+        
+        # Save to database
+        if not vehicle_id:
+            db.session.add(vehicle)
+        
         db.session.commit()
+        
+        # Log successful operation
+        current_app.logger.info(f"Vehicle {vehicle.id} {action} successfully")
         
         return jsonify({
             'success': True,
-            'message': 'Vehicle deleted successfully'
+            'message': f'Vehicle {action} successfully',
+            'data': {
+                'id': vehicle.id,
+                'make': vehicle.make,
+                'model': vehicle.model,
+                'registration_number': vehicle.registration_number,
+                'image_url': vehicle.image_url
+            }
         })
+        
     except Exception as e:
         db.session.rollback()
-        current_app.logger.error(f'Error deleting vehicle {vehicle_id}: {str(e)}')
+        error_msg = str(e)
+        current_app.logger.error(f"Error saving vehicle: {error_msg}", exc_info=True)
         return jsonify({
             'success': False,
-            'error': 'Failed to delete vehicle'
+            'message': f'Failed to save vehicle: {error_msg}'
+        }), 500
+
+# API: Bulk delete vehicles
+@bp.route('/api/vehicles/bulk-delete', methods=['POST'])
+@login_required
+@admin_required
+def api_bulk_delete_vehicles():
+    """
+    Bulk delete multiple vehicles with validation and error handling
+    """
+    try:
+        data = request.get_json()
+        
+        if not data or 'vehicle_ids' not in data or not isinstance(data['vehicle_ids'], list):
+            return jsonify({
+                'success': False,
+                'message': 'Invalid request. Expected array of vehicle IDs.'
+            }), 400
+        
+        vehicle_ids = [int(vid) for vid in data['vehicle_ids'] if str(vid).isdigit()]
+        
+        if not vehicle_ids:
+            return jsonify({
+                'success': False,
+                'message': 'No valid vehicle IDs provided'
+            }), 400
+        
+        # Check for vehicles with active bookings
+        vehicles_with_bookings = db.session.query(Vehicle.id).join(Booking).filter(
+            Vehicle.id.in_(vehicle_ids),
+            Booking.status.in_(['pending', 'confirmed', 'in_progress'])
+        ).distinct().all()
+        
+        if vehicles_with_bookings:
+            booked_ids = [str(v[0]) for v in vehicles_with_bookings]
+            return jsonify({
+                'success': False,
+                'message': f'Cannot delete vehicles with active bookings',
+                'details': {
+                    'vehicles_with_bookings': booked_ids
+                }
+            }), 400
+        
+        # Get vehicles to delete
+        vehicles = Vehicle.query.filter(Vehicle.id.in_(vehicle_ids)).all()
+        
+        if not vehicles:
+            return jsonify({
+                'success': False,
+                'message': 'No vehicles found with the provided IDs'
+            }), 404
+        
+        # Delete associated images
+        for vehicle in vehicles:
+            if vehicle.image_url and os.path.exists(vehicle.image_url.lstrip('/')):
+                try:
+                    os.remove(vehicle.image_url.lstrip('/'))
+                except OSError as e:
+                    current_app.logger.error(f"Error deleting image for vehicle {vehicle.id}: {str(e)}")
+        
+        # Delete vehicles
+        delete_count = Vehicle.query.filter(Vehicle.id.in_(vehicle_ids)).delete(synchronize_session=False)
+        db.session.commit()
+        
+        current_app.logger.info(f"Bulk deleted {delete_count} vehicles by user {current_user.id}")
+        
+        return jsonify({
+            'success': True,
+            'message': f'Successfully deleted {delete_count} vehicles',
+            'count': delete_count
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error in bulk delete: {str(e)}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'message': 'Failed to delete vehicles',
+            'error': str(e)
+        }), 500
+
+# API: Toggle vehicle availability
+@bp.route('/api/vehicles/<int:vehicle_id>/toggle-availability', methods=['POST'])
+@login_required
+@admin_required
+def toggle_vehicle_availability(vehicle_id):
+    """
+    Toggle vehicle availability status
+    """
+    try:
+        vehicle = Vehicle.query.get(vehicle_id)
+        
+        if not vehicle:
+            return jsonify({
+                'success': False,
+                'message': 'Vehicle not found'
+            }), 404
+        
+        # Toggle availability
+        vehicle.is_available = not vehicle.is_available
+        vehicle.updated_at = datetime.utcnow()
+        vehicle.updated_by = current_user.id
+        
+        db.session.commit()
+        
+        status = 'available' if vehicle.is_available else 'unavailable'
+        current_app.logger.info(f"Toggled vehicle {vehicle_id} availability to {status} by user {current_user.id}")
+        
+        return jsonify({
+            'success': True,
+            'message': f'Vehicle marked as {status}',
+            'data': {
+                'id': vehicle.id,
+                'is_available': vehicle.is_available
+            }
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error toggling vehicle availability: {str(e)}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'message': 'Failed to update vehicle availability'
         }), 500
 
 # API: List all bookings
